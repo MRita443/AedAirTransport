@@ -52,8 +52,8 @@ void Menu::extractAirlinesFile() {
                 }
             }
             if (counter == 0) {
-                //TODO: Define how airlines will be present in Graph class and connect with flights file
-                graph.addNode(code, name, callsign, country);
+                //TODO: Figure out how to relate Airlines to Graph and store them
+                //this->airlines.insert(new Airline(code, name, callsign, country));
             }
         }
     }
@@ -141,7 +141,8 @@ void Menu::extractFlightsFile() {
             }
             if (counter == 0) {
                 //TODO: Define how flights will be present in Graph class and connect with flights file
-                graph.addEdge(code, name, callsign, country);
+                graph.addEdge(graph.getAirportToNode().at(source),
+                              graph.getAirportToNode().at(target), //TODO: Add Airline);
             }
         }
     }
