@@ -75,14 +75,11 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a284b99bdb07994225dee3c2cdb59c80a"><td class="memItemLeft" align="right" valign="top"><a id="a284b99bdb07994225dee3c2cdb59c80a"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>Graph</b> (int nodes)</td></tr>
 <tr class="separator:a284b99bdb07994225dee3c2cdb59c80a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8d4c82d5ebe856bbef3f2f516aa0c79d"><td class="memItemLeft" align="right" valign="top"><a id="a8d4c82d5ebe856bbef3f2f516aa0c79d"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>addEdge</b> (int src, int dest, list&lt; <a class="el" href="classAirline.html">Airline</a> * &gt; airlines)</td></tr>
+<tr class="memitem:a8d4c82d5ebe856bbef3f2f516aa0c79d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGraph.html#a8d4c82d5ebe856bbef3f2f516aa0c79d">addEdge</a> (int src, int dest, list&lt; <a class="el" href="classAirline.html">Airline</a> * &gt; airlines)</td></tr>
 <tr class="separator:a8d4c82d5ebe856bbef3f2f516aa0c79d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a99a730595e1da2689f6e636b5ce49bd1"><td class="memItemLeft" align="right" valign="top"><a id="a99a730595e1da2689f6e636b5ce49bd1"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>addEdge</b> (int src, int dest, <a class="el" href="classAirline.html">Airline</a> *airline)</td></tr>
+<tr class="memitem:a99a730595e1da2689f6e636b5ce49bd1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGraph.html#a99a730595e1da2689f6e636b5ce49bd1">addEdge</a> (int src, int dest, <a class="el" href="classAirline.html">Airline</a> *airline)</td></tr>
 <tr class="separator:a99a730595e1da2689f6e636b5ce49bd1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5978efd4c93c02a0a1d12a2d13996c6d"><td class="memItemLeft" align="right" valign="top"><a id="a5978efd4c93c02a0a1d12a2d13996c6d"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>addNode</b> (string code, string name, string city, string country, float latitude, float longitude)</td></tr>
+<tr class="memitem:a5978efd4c93c02a0a1d12a2d13996c6d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGraph.html#a5978efd4c93c02a0a1d12a2d13996c6d">addNode</a> (string code, string name, string city, string country, float latitude, float longitude)</td></tr>
 <tr class="separator:a5978efd4c93c02a0a1d12a2d13996c6d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae1e45e27c60711dadec619ca17e830a4"><td class="memItemLeft" align="right" valign="top"><a id="ae1e45e27c60711dadec619ca17e830a4"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>bfs</b> (int v)</td></tr>
@@ -111,10 +108,207 @@ const unordered_map&lt; string, <a class="el" href="classAirline.html">Airline</
 <tr class="memitem:a56ae806c21519da8a413640fb984c169"><td class="memItemLeft" align="right" valign="top"><a id="a56ae806c21519da8a413640fb984c169"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>setCodeToAirline</b> (const unordered_map&lt; string, <a class="el" href="classAirline.html">Airline</a> * &gt; &amp;codeToAirline)</td></tr>
 <tr class="separator:a56ae806c21519da8a413640fb984c169"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a46a7de9b2df34a3a4920bc5bf5f5b909"><td class="memItemLeft" align="right" valign="top"><a id="a46a7de9b2df34a3a4920bc5bf5f5b909"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>addAirlineEntry</b> (string code, string name, string callsign, string country)</td></tr>
+<tr class="memitem:a46a7de9b2df34a3a4920bc5bf5f5b909"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classGraph.html#a46a7de9b2df34a3a4920bc5bf5f5b909">addAirlineEntry</a> (string code, string name, string callsign, string country)</td></tr>
 <tr class="separator:a46a7de9b2df34a3a4920bc5bf5f5b909"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="a46a7de9b2df34a3a4920bc5bf5f5b909"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a46a7de9b2df34a3a4920bc5bf5f5b909">&#9670;&nbsp;</a></span>addAirlineEntry()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Graph::addAirlineEntry </td>
+          <td>(</td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>code</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>name</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>callsign</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>country</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Adds a new entry to codeToAirline, creating the corresponding <a class="el" href="classAirline.html">Airline</a> object Time Complexity: O(n) (worst case) | O(1) (average case)</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">code</td><td>- Code of the new <a class="el" href="classAirline.html">Airline</a> </td></tr>
+    <tr><td class="paramname">name</td><td>- Name of the new <a class="el" href="classAirline.html">Airline</a> </td></tr>
+    <tr><td class="paramname">callsign</td><td>- Callsign of the new <a class="el" href="classAirline.html">Airline</a> </td></tr>
+    <tr><td class="paramname">country</td><td>- Country of the new <a class="el" href="classAirline.html">Airline</a> </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a99a730595e1da2689f6e636b5ce49bd1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a99a730595e1da2689f6e636b5ce49bd1">&#9670;&nbsp;</a></span>addEdge() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Graph::addEdge </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>src</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>dest</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classAirline.html">Airline</a> *&#160;</td>
+          <td class="paramname"><em>airline</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Adds an edge to the graph Time Complexity: O(1) </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">src</td><td>- Number of the source node </td></tr>
+    <tr><td class="paramname">dest</td><td>- Number of the destination node </td></tr>
+    <tr><td class="paramname">airline</td><td>- Pointer to an Airlines whose flight connects the two nodes (Airports) </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a8d4c82d5ebe856bbef3f2f516aa0c79d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8d4c82d5ebe856bbef3f2f516aa0c79d">&#9670;&nbsp;</a></span>addEdge() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Graph::addEdge </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>src</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>dest</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">list&lt; <a class="el" href="classAirline.html">Airline</a> * &gt;&#160;</td>
+          <td class="paramname"><em>airlines</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Adds an edge to the graph Time Complexity: O(1) </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">src</td><td>- Number of the source node </td></tr>
+    <tr><td class="paramname">dest</td><td>- Number of the destination node </td></tr>
+    <tr><td class="paramname">airlines</td><td>- List of pointers to the Airlines whose flights connect the two nodes (Airports) </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a5978efd4c93c02a0a1d12a2d13996c6d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5978efd4c93c02a0a1d12a2d13996c6d">&#9670;&nbsp;</a></span>addNode()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Graph::addNode </td>
+          <td>(</td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>code</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>name</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>city</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>country</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>latitude</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>longitude</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Adds a new node to the graph, creating the corresponding <a class="el" href="classAirport.html">Airport</a> object Time Complexity: O(n) (worst case) | O(1) (average case) </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">code</td><td>- Code of the new <a class="el" href="classAirport.html">Airport</a> </td></tr>
+    <tr><td class="paramname">name</td><td>- Name of the new <a class="el" href="classAirport.html">Airport</a> </td></tr>
+    <tr><td class="paramname">city</td><td>- City of the new <a class="el" href="classAirport.html">Airport</a> </td></tr>
+    <tr><td class="paramname">country</td><td>- Country of the new <a class="el" href="classAirport.html">Airport</a> </td></tr>
+    <tr><td class="paramname">latitude</td><td>- Latitude of the new <a class="el" href="classAirport.html">Airport</a> </td></tr>
+    <tr><td class="paramname">longitude</td><td>- Longitude of the new <a class="el" href="classAirport.html">Airport</a> </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li>src/<a class="el" href="graph_8h_source.html">graph.h</a></li>
 <li>src/graph.cpp</li>

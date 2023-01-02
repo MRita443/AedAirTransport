@@ -74,19 +74,52 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ab46ff74d9e378df01751690402667d97"><td class="memItemLeft" align="right" valign="top"><a id="ab46ff74d9e378df01751690402667d97"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>initializeMenu</b> ()</td></tr>
 <tr class="separator:ab46ff74d9e378df01751690402667d97"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a46cbe04f96d00def1b10e43b5af836eb"><td class="memItemLeft" align="right" valign="top"><a id="a46cbe04f96d00def1b10e43b5af836eb"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>extractAirlinesFile</b> ()</td></tr>
+<tr class="memitem:a46cbe04f96d00def1b10e43b5af836eb"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMenu.html#a46cbe04f96d00def1b10e43b5af836eb">extractAirlinesFile</a> ()</td></tr>
 <tr class="separator:a46cbe04f96d00def1b10e43b5af836eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad8a61fe9646e7f9a77cc3e82aab829ba"><td class="memItemLeft" align="right" valign="top"><a id="ad8a61fe9646e7f9a77cc3e82aab829ba"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>extractAirportsFile</b> ()</td></tr>
+<tr class="memitem:ad8a61fe9646e7f9a77cc3e82aab829ba"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMenu.html#ad8a61fe9646e7f9a77cc3e82aab829ba">extractAirportsFile</a> ()</td></tr>
 <tr class="separator:ad8a61fe9646e7f9a77cc3e82aab829ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa629901c371f339bcaaf48fe0d6c265a"><td class="memItemLeft" align="right" valign="top"><a id="aa629901c371f339bcaaf48fe0d6c265a"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>extractFlightsFile</b> ()</td></tr>
+<tr class="memitem:aa629901c371f339bcaaf48fe0d6c265a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMenu.html#aa629901c371f339bcaaf48fe0d6c265a">extractFlightsFile</a> ()</td></tr>
 <tr class="separator:aa629901c371f339bcaaf48fe0d6c265a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae712ed57d2d832d1d639c54b39187929"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMenu.html#ae712ed57d2d832d1d639c54b39187929">extractFileInfo</a> ()</td></tr>
 <tr class="separator:ae712ed57d2d832d1d639c54b39187929"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="a46cbe04f96d00def1b10e43b5af836eb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a46cbe04f96d00def1b10e43b5af836eb">&#9670;&nbsp;</a></span>extractAirlinesFile()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Menu::extractAirlinesFile </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Extracts and stores the information of airlines.csv Time Complexity: O(n²) (worst case) | 0(1) (average case), where n is the number of lines of airlines.csv </p>
+
+</div>
+</div>
+<a id="ad8a61fe9646e7f9a77cc3e82aab829ba"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad8a61fe9646e7f9a77cc3e82aab829ba">&#9670;&nbsp;</a></span>extractAirportsFile()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Menu::extractAirportsFile </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Extracts and stores the information of airports.csv Time Complexity: O(n²) (worst case) | 0(1) (average case), where n is the number of lines of airports.csv </p>
+
+</div>
+</div>
 <a id="ae712ed57d2d832d1d639c54b39187929"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ae712ed57d2d832d1d639c54b39187929">&#9670;&nbsp;</a></span>extractFileInfo()</h2>
 
@@ -101,7 +134,25 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>extractFlightsFile</b
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Receives info from the three files and extracts it. </p>
+<p>Delegates extracting file info, calling the appropriate functions for each file </p>
+
+</div>
+</div>
+<a id="aa629901c371f339bcaaf48fe0d6c265a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa629901c371f339bcaaf48fe0d6c265a">&#9670;&nbsp;</a></span>extractFlightsFile()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Menu::extractFlightsFile </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Extracts and stores the information of flights.csv Time Complexity: O(n), where n is the number of lines of flights.csv </p>
 
 </div>
 </div>
