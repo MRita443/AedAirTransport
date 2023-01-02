@@ -6,9 +6,6 @@ string Menu::airlinesFilePath = "../dataset/airlines.csv";
 string Menu::airportsFilePath = "../dataset/airports.csv";
 string Menu::flightsFilePath = "../dataset/flights.csv";
 
-Menu::Menu() {
-    graph = Graph(); //TODO: Switch Graph constructor
-}
 
 //Extract info from files
 /**

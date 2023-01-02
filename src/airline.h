@@ -3,15 +3,14 @@
 
 #include <string>
 
-class Airport
-{
+class Airline {
 private:
-    string code;
-    string name;
-    string callsign;
-    string country;
+    std::string code;
+    std::string name;
+    std::string callsign;
+    std::string country;
 public:
-    
-}
+    Airline(std::string code, std::string name, std::string callsign, std::string country);
+};
 
 #endif

@@ -9,7 +9,7 @@
 class Menu
 {
 private:
-    Graph graph;
+    Graph graph = Graph(0);
     string static airlinesFilePath;
     string static airportsFilePath;
     string static flightsFilePath;

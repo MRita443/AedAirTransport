@@ -12,7 +12,7 @@ using namespace std;
 class Graph {
     struct Edge {
         int dest;   // Destination node
-        list<Airline> airlines; // An integer weight
+        list<Airline *> airlines; // An integer weight
     };
 
     struct Node {
@@ -28,7 +28,9 @@ public:
     Graph(int nodes);
 
     // Add edge from source to destination with a certain weight
-    void addEdge(int src, int dest, list<Airlines> airlines);
+    void addEdge(int src, int dest, list<Airline> airlines);
+
+    void addNode(string code, string name, string city, string country, float latitude, float longitude)
 
     // Depth-First Search: example implementation
     //void dfs(int v);
