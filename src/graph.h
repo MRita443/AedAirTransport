@@ -18,7 +18,7 @@ class Graph {
     };
 
     struct Node {
-        Airport* airport; //The Airport this node represents
+        Airport *airport; //The Airport this node represents
         list<Edge> adj; // The list of outgoing edges (to adjacent nodes)
         bool visited;   // As the node been visited on a search?
     };
@@ -26,15 +26,16 @@ class Graph {
     int n;              // Graph size (vertices are numbered from 1 to n)
     vector<Node> nodes; // The list of nodes being represented
     unordered_map<string, int> airportToNode;
+    unordered_map<string, Airline *> codeToAirline;
 
 public:
     // Constructor: nr nodes and direction (default: undirected)
-    Graph(int nodes);
+    explicit Graph(int nodes);
 
     // Add edge from source to destination with a certain weight
-    void addEdge(int src, int dest, list<Airline*> airlines);
+    void addEdge(int src, int dest, list<Airline *> airlines);
 
-    void addEdge(int src, int dest, Airline &airline);
+    void addEdge(int src, int dest, Airline *airline);
 
     void addNode(string code, string name, string city, string country, float latitude, float longitude);
 
@@ -57,9 +58,18 @@ public:
 
     void setAirportToNode(const unordered_map<string, int> &airportToNode);
 
+    const unordered_map<string, Airline *> &getCodeToAirline() const;
+
+    void setCodeToAirline(const unordered_map<string, Airline *> &codeToAirline);
+
+    void addAirlineEntry(string code, string name, string callsign, string country);
+
     // ----- Functions to implement in this class -----
     //int distance(int a, int b);
     //int diameter();
+
+    //TODO: Add destructor function
+
 };
 
 #endif

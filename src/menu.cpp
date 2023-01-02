@@ -6,10 +6,11 @@ string Menu::airlinesFilePath = "../dataset/airlines.csv";
 string Menu::airportsFilePath = "../dataset/airports.csv";
 string Menu::flightsFilePath = "../dataset/flights.csv";
 
+Menu::Menu() {}
 
 //Extract info from files
 /**
- * Receives info from the three files and extracts it.
+ * Delegates extracting file info, calling the appropriate functions for each file
  */
 void
 Menu::extractFileInfo() {
@@ -17,7 +18,10 @@ Menu::extractFileInfo() {
     extractAirportsFile();
     extractFlightsFile();
 }
-
+/**
+ * Extracts and stores the information of airlines.csv
+ * Time Complexity: O(n²) (worst case) | 0(1) (average case), where n is the number of lines of airlines.csv
+ */
 void Menu::extractAirlinesFile() {
 
     ifstream airlines(airlinesFilePath);
@@ -52,13 +56,15 @@ void Menu::extractAirlinesFile() {
                 }
             }
             if (counter == 0) {
-                //TODO: Figure out how to relate Airlines to Graph and store them
-                //this->airlines.insert(new Airline(code, name, callsign, country));
+                graph.addAirlineEntry(code, name, callsign, country);
             }
         }
     }
 }
-
+/**
+ * Extracts and stores the information of airports.csv
+ * Time Complexity: O(n²) (worst case) | 0(1) (average case), where n is the number of lines of airports.csv
+ */
 void Menu::extractAirportsFile() {
     {
         ifstream airports(airportsFilePath);
@@ -109,7 +115,10 @@ void Menu::extractAirportsFile() {
     }
 }
 
-
+/**
+ * Extracts and stores the information of flights.csv
+ * Time Complexity: O(n), where n is the number of lines of flights.csv
+ */
 void Menu::extractFlightsFile() {
 
     ifstream flights(flightsFilePath);
@@ -140,10 +149,16 @@ void Menu::extractFlightsFile() {
                 }
             }
             if (counter == 0) {
-                //TODO: Define how flights will be present in Graph class and connect with flights file
                 graph.addEdge(graph.getAirportToNode().at(source),
-                              graph.getAirportToNode().at(target), //TODO: Add Airline);
+                              graph.getAirportToNode().at(target), graph.getCodeToAirline().at(airlineCode));
             }
         }
     }
 }
+
+void Menu::initializeMenu() {
+    extractFileInfo();
+    //TODO: Add Menu Screens
+}
+
+

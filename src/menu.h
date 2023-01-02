@@ -11,14 +11,13 @@ class Menu
 {
 private:
     Graph graph = Graph(0);
-    unordered_set<Airport*> airports;
-    unordered_set<Airline*> airlines;
     string static airlinesFilePath;
     string static airportsFilePath;
     string static flightsFilePath;
 
 public:
     Menu();
+    void initializeMenu();
     void extractAirlinesFile();
     void extractAirportsFile();
     void extractFlightsFile();
