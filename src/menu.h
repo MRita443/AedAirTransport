@@ -41,6 +41,10 @@ public:
     void mainMenu();
 
     static bool checkInput(unsigned int checkLength = 0);
+
+    list<Airline> airlineRestrictionsMenu();
+
+    unsigned int airportInfoMenu();
 };
 
 #endif
