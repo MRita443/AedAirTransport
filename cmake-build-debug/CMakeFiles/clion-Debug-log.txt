@@ -1,1 +1,4 @@
-CMakeLists.txt not found in /home/rita/Documents/aed22_23/AirTransport Select CMakeLists.txt
+/snap/clion/219/bin/cmake/linux/bin/cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_MAKE_PROGRAM=/snap/clion/219/bin/ninja/linux/ninja -G Ninja -S /home/rita/Documents/aed22_23/AirTransport -B /home/rita/Documents/aed22_23/AirTransport/cmake-build-debug
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /home/rita/Documents/aed22_23/AirTransport/cmake-build-debug

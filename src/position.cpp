@@ -8,6 +8,6 @@ private:
     float longitude;
 public:
     //TODO: Distance function
-}
+};
 
 #endif

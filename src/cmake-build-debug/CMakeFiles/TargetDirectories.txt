@@ -1,3 +1,0 @@
-/home/rita/Documents/aed22_23/AirTransport/src/cmake-build-debug/CMakeFiles/AirTransport.dir
-/home/rita/Documents/aed22_23/AirTransport/src/cmake-build-debug/CMakeFiles/edit_cache.dir
-/home/rita/Documents/aed22_23/AirTransport/src/cmake-build-debug/CMakeFiles/rebuild_cache.dir
