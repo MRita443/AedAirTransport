@@ -1,13 +1,24 @@
-#ifndef POSITION_H
-#define POSITION_H
+#include "position.h"
 
-class Airport
-{
-private:
-    float latitude;
-    float longitude;
-public:
-    //TODO: Distance function
-};
+using namespace std;
 
-#endif
+Position::Position(const float &latitude, const float &longitude) {
+    this->latitude = latitude;
+    this->longitude = longitude;
+}
+
+float Position::getLatitude() const {
+    return latitude;
+}
+
+void Position::setLatitude(float latitude) {
+    Position::latitude = latitude;
+}
+
+float Position::getLongitude() const {
+    return longitude;
+}
+
+void Position::setLongitude(float longitude) {
+    Position::longitude = longitude;
+}
