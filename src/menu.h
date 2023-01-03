@@ -24,8 +24,6 @@ private:
 public:
     Menu();
 
-    void initializeMenu();
-
     void extractAirlinesFile();
 
     void extractAirportsFile();
@@ -33,7 +31,6 @@ public:
     void extractFlightsFile();
 
     void extractFileInfo();
-
 
     void initializeMenu();
 
@@ -45,4 +42,6 @@ public:
 
     static bool checkInput(unsigned int checkLength = 0);
 };
+
+#endif
 
