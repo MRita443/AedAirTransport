@@ -2,13 +2,14 @@
 
 using namespace std;
 
-string Menu::airlinesFilePath = "../dataset/airlines.csv";
-string Menu::airportsFilePath = "../dataset/airports.csv";
-string Menu::flightsFilePath = "../dataset/flights.csv";
+unsigned const Menu::COLUMN_WIDTH = 45;
+unsigned const Menu::COLUMNS_PER_LINE = 3;
+string const Menu::airlinesFilePath = "../dataset/airlines.csv";
+string const Menu::airportsFilePath = "../dataset/airports.csv";
+string const Menu::flightsFilePath = "../dataset/flights.csv";
 
-Menu::Menu() {}
+Menu::Menu() = default;
 
-//Extract info from files
 /**
  * Delegates extracting file info, calling the appropriate functions for each file
  */
@@ -18,6 +19,7 @@ Menu::extractFileInfo() {
     extractAirportsFile();
     extractFlightsFile();
 }
+
 /**
  * Extracts and stores the information of airlines.csv
  * Time Complexity: O(n²) (worst case) | 0(1) (average case), where n is the number of lines of airlines.csv
@@ -61,6 +63,7 @@ void Menu::extractAirlinesFile() {
         }
     }
 }
+
 /**
  * Extracts and stores the information of airports.csv
  * Time Complexity: O(n²) (worst case) | 0(1) (average case), where n is the number of lines of airports.csv
@@ -156,9 +159,451 @@ void Menu::extractFlightsFile() {
     }
 }
 
-void Menu::initializeMenu() {
-    extractFileInfo();
-    //TODO: Add Menu Screens
+/**
+ * Outputs main menu screen and calls other menu screens according to user input
+ * //TODO: Time Complexity
+ */
+void Menu::mainMenu() {
+
+    unsigned char commandIn = '\0';
+    string line;
+
+    while (commandIn != 'q') {
+        if (commandIn == '\0') { //If program just started or returned from a different menu, print header
+
+            //Header
+            cout << setw(COLUMN_WIDTH * COLUMNS_PER_LINE / 2) << setfill('-') << right << "AIR TRANSPORT";
+            cout << setw(COLUMN_WIDTH * COLUMNS_PER_LINE / 2) << left << " LOOKUP SYSTEM" << endl;
+
+            cout << setw(COLUMN_WIDTH) << setfill(' ') << "Flights: [1]" << setw(COLUMN_WIDTH)
+                 << "Information: [2]" << endl;
+            cout << setw(COLUMN_WIDTH) << "Quit: [q]" << endl;
+        }
+        cout << endl << "Press the appropriate key to the function you'd like to access: ";
+        cin >> commandIn;
+        if (!checkInput(1)) {
+            commandIn = '\0';
+            continue;
+        }
+        switch (commandIn) {
+            case '1': {
+                commandIn = flightsMenu();
+                break;
+            }
+            case '2': {
+                commandIn = infoMenu();
+                break;
+            }
+            case 'q': {
+                cout << "Thank you for using our Air Transport Lookup System!";
+                break;
+            }
+            default: {
+                cout << "Please press one of listed keys." << endl;
+                break;
+            }
+        }
+    }
+}
+/**
+ * Outputs airline restrictions menu screen and returns a set containing all the valid airlines for the given inputs
+ * //TODO: Time Complexity
+ * @return - unordered_set<Airline> containing all the valid airlines for the flight
+ *
+ */
+list<Airline> Menu::airlineRestrictionsMenu() {
+    //TODO: CHANGE TO UNORDERED_SET
+    unsigned char commandIn;
+    //unordered_set<Airline> validAirlines;
+
+    cout << setw(COLUMN_WIDTH) << setfill(' ') << "Any airline: [1]" << setw(COLUMN_WIDTH)
+         << "One airline: [2]" << setw(COLUMN_WIDTH) << "Several airlines: [3]" << endl;
+
+    while (true) {
+        cout << "Please select the airlines you'd like to fly with this flight: ";
+        cin >> commandIn;
+
+        if (!checkInput(1)) {
+            continue;
+        }
+        switch (commandIn) {
+            case '1': {
+                //TODO: Change to unordered_set of Airlines
+                //TODO: Return whole set
+            }
+            case '2': {
+                string code;
+                cout << "Please enter the code of your preferred airline: ";
+                cin >> code;
+                if (!checkInput(3)) break;
+                //TODO: Check if Airline exists
+                //TODO: Add Airline to validAirlines
+                //return validAirlines;
+            }
+            case '3': {
+                string code;
+
+                cout << "Please enter the code of your preferred airline, or q to finish: ";
+                cin >> code;
+
+                while (code != "q") {
+                    if (!checkInput(3)) break;
+                    //TODO: Check if Airline exists
+                    //TODO: Add Airline to validAirlines
+                    cout << "Please enter the code of your preferred airline, or q to finish: ";
+                    cin >> code;
+                }
+                //return validAirlines;
+            }
+            default:
+                cout << "Please press one of listed keys." << endl;
+                break;
+        }
+    }
 }
 
+/**
+ * Outputs flights menu screen and decides graph function calls according to user input
+ * @return - Last inputted command, or '\0' for previous menu command
+ */
+unsigned Menu::flightsMenu() {
+    unsigned char commandIn = '\0';
+    list<Airport *> departure, arrival;
+
+
+    while (commandIn != 'q') {
+
+        bool validFirstInput;
+
+        if (commandIn == '\0') {
+            //Header
+            cout << setw(COLUMN_WIDTH * COLUMNS_PER_LINE / 2) << setfill('-') << right << "FLIG";
+            cout << setw(COLUMN_WIDTH * COLUMNS_PER_LINE / 2) << left << "HTS" << endl;
+            cout << setw(COLUMN_WIDTH) << setfill(' ') << "Airport: [1]" << setw(COLUMN_WIDTH)
+                 << "City: [2]" << setw(COLUMN_WIDTH) << "Location: [3]" << endl;
+            cout << setw(COLUMN_WIDTH) << "Back: [b]" << setw(COLUMN_WIDTH) << "Quit: [q]" << endl;
+        }
+        for (string currentSelection: {"departure", "arrival"}) {
+
+            if (currentSelection == "departure" || validFirstInput) {
+                cout << endl << "Please select how to input your " << currentSelection << " location: ";
+                cin >> commandIn;
+            }
+
+            if (!checkInput(1)) {
+                commandIn = '\0';
+                break;
+            }
+            switch (commandIn) {
+                case '1': {
+                    string airportCode;
+                    cout << "Please enter the code of your preferred " << currentSelection << " airport: ";
+                    cin >> airportCode;
+                    if (!checkInput(3)) break;
+
+                    //TODO: Check if Airport exists
+                    if (currentSelection == "departure") {
+                        departure = {//TODO: Get Airport by Code
+                        };
+                        validFirstInput = true;
+                    } else
+                        arrival = {//TODO: Get Airport by Code
+                        };
+                    //unordered_set<Airline> validAirlines = airlineRestrictionsMenu();
+                    //TODO: Get shortest flight with given airlines
+                    break;
+                }
+                case '2': {
+                    string city;
+                    cout << "Please enter your preferred city of " << currentSelection << ": ";
+                    cin >> city;
+                    if (!checkInput()) break;
+                    //TODO: Check if City exists
+
+                    string country;
+                    cout << "Please enter the country this city is located in: ";
+                    cin >> country;
+                    if (!checkInput()) break;
+                    //TODO: Check if the city exists in this country
+
+                    if (currentSelection == "departure") {
+                        departure = {//TODO: Get Airport by City
+                        };
+                        validFirstInput = true;
+                    } else
+                        arrival = {//TODO: Get Airport by City
+                        };
+
+                    //unordered_set<Airline> validAirlines = airlineRestrictionsMenu();
+                    //TODO: Get shortest flight with given airlines
+                    break;
+                }
+                case '3': {
+                    float latitude, longitude, maxDistance;
+                    cout << "Please enter the latitude of your preferred " << currentSelection << " location: ";
+                    cin >> latitude;
+                    if (!checkInput()) break;
+
+                    cout << "Please enter the longitude of your preferred " << currentSelection
+                         << " location: ";
+                    cin >> longitude;
+                    if (!checkInput()) break;
+
+                    //TODO: Check if location is valid
+
+                    cout << "Please enter the max distance of the airport to your preferred "
+                         << currentSelection
+                         << " location: ";
+                    cin >> maxDistance;
+                    if (!checkInput()) break;
+
+                    if (currentSelection == "departure") {
+                        departure = {//TODO: Get Airport by location
+                        };
+                        validFirstInput = true;
+                    } else
+                        arrival = {//TODO: Get Airport by location
+                        };
+                    //unordered_set<Airline> validAirlines = airlineRestrictionsMenu();
+                    //TODO: Get shortest flight with given airlines
+                    break;
+                }
+                case 'b': {
+                    return '\0';
+                }
+                case 'q': {
+                    cout << "Thank you for using our Air Transport Lookup System!" << endl;
+                    return 'q';
+                }
+                default:
+                    cout << "Please press one of listed keys." << endl;
+                    break;
+            }
+        }
+    }
+    return commandIn;
+}
+/**
+ * Outputs airport information menu screen and decides graph function calls according to user input
+ * @return - Last inputted command, or '\0' for previous menu command
+ */
+unsigned Menu::airportInfoMenu() {
+    unsigned char commandIn = '\0';
+
+    while (commandIn != 'q') {
+        if (commandIn == '\0') {
+            //Header
+            cout << setw(COLUMN_WIDTH * COLUMNS_PER_LINE / 2) << setfill('-') << right << "AIRPORT IN";
+            cout << setw(COLUMN_WIDTH * COLUMNS_PER_LINE / 2) << left << "FOMARTION" << endl;
+
+            cout << setw(COLUMN_WIDTH) << setfill(' ') << "Number of flights: [1]" << setw(COLUMN_WIDTH)
+                 << "Number of different airlines: [2]" << setw(COLUMN_WIDTH) << "Number of different destinations: [3]"
+                 << endl;
+            cout << setw(COLUMN_WIDTH) << "Number of reachable countries: [4]" << setw(COLUMN_WIDTH)
+                 << "Number of airports reachable within x flights: [5]" << setw(COLUMN_WIDTH)
+                 << "Number of cities reachable within x flights: [6]" << endl;
+            cout << setw(COLUMN_WIDTH) << "Number of countries reachable within x flights: [7]" << setw(COLUMN_WIDTH)
+                 << "Back: [b]" << setw(COLUMN_WIDTH) << "Quit: [q]" << endl;
+        }
+
+        while (commandIn != 'q') {
+            cout << endl << "Press the appropriate key to the function you'd like to access: ";
+            cin >> commandIn;
+
+            if (!checkInput(1)) {
+                commandIn = '\0';
+                continue;
+            }
+            switch (commandIn) {
+                case '1': {
+                    string airportCode;
+                    cout << "Please enter the code of the airport you'd like to obtain information about: ";
+                    cin >> airportCode;
+                    if (!checkInput(3)) break;
+                    //TODO: Check if Airport exists
+
+                    //TODO: Get number of flights
+                    break;
+                }
+                case '2': {
+                    string airportCode;
+                    cout << "Please enter the code of the airport you'd like to obtain information about: ";
+                    cin >> airportCode;
+                    if (!checkInput(3)) break;
+                    //TODO: Check if Airport exists
+
+                    //TODO: Get number of airlines
+                    break;
+                }
+                case '3': {
+                    string airportCode;
+                    cout << "Please enter the code of the airport you'd like to obtain information about: ";
+                    cin >> airportCode;
+                    if (!checkInput(3)) break;
+                    //TODO: Check if Airport exists
+
+                    //TODO: Get number of destinations
+                    break;
+                }
+                case '4': {
+                    string airportCode;
+                    cout << "Please enter the code of the airport you'd like to obtain information about: ";
+                    cin >> airportCode;
+                    if (!checkInput(3)) break;
+                    //TODO: Check if Airport exists
+
+                    //TODO: Get number of countries
+                    break;
+                }
+                case '5': {
+                    string airportCode;
+                    cout << "Please enter the code of the airport you'd like to obtain information about: ";
+                    cin >> airportCode;
+                    if (!checkInput(3)) break;
+                    //TODO: Check if Airport exists
+
+                    unsigned numFlights;
+                    cout << "Please enter the max number of flights you'd like to check for: ";
+                    cin >> numFlights;
+                    if (!checkInput(5)) break;
+
+                    //TODO: Get number of airports in x flights
+                    break;
+                }
+                case '6': {
+                    string airportCode;
+                    cout << "Please enter the code of the airport you'd like to obtain information about: ";
+                    cin >> airportCode;
+                    if (!checkInput(3)) break;
+                    //TODO: Check if Airport exists
+
+                    unsigned numFlights;
+                    cout << "Please enter the max number of flights you'd like to check for: ";
+                    cin >> numFlights;
+                    if (!checkInput(5)) break;
+
+                    //TODO: Get number of cities in x flights
+                    break;
+                }
+                case '7': {
+                    string airportCode;
+                    cout << "Please enter the code of the airport you'd like to obtain information about: ";
+                    cin >> airportCode;
+                    if (!checkInput(3)) break;
+                    //TODO: Check if Airport exists
+
+                    unsigned numFlights;
+                    cout << "Please enter the max number of flights you'd like to check for: ";
+                    cin >> numFlights;
+                    if (!checkInput(5)) break;
+
+                    //TODO: Get number of countries in x flights
+                    break;
+                }
+                case 'b': {
+                    return '\0';
+                }
+                case 'q': {
+                    cout << "Thank you for using our Air Transport Lookup System!" << endl;
+                    break;
+                }
+                default:
+                    cout << "Please press one of listed keys." << endl;
+                    break;
+            }
+        }
+    }
+    return commandIn;
+}
+
+//unsigned Menu::generalInfoMenu(){}
+
+/**
+ * Outputs information menu screen and calls other menu screens according to user input
+ * @return - Last inputted command, or '\0' for previous menu command
+ */
+unsigned Menu::infoMenu() {
+    unsigned char commandIn = '\0';
+
+    while (commandIn != 'q') {
+        if (commandIn == '\0') {
+            //Header
+            cout << setw(COLUMN_WIDTH * COLUMNS_PER_LINE / 2) << setfill('-') << right << "INFOR";
+            cout << setw(COLUMN_WIDTH * COLUMNS_PER_LINE / 2) << left << "MATION" << endl;
+
+            cout << setw(COLUMN_WIDTH) << setfill(' ') << "Information on a given airport: [1]" << setw(COLUMN_WIDTH)
+                 << "Information on the global network: [2]" << endl;
+            cout << setw(COLUMN_WIDTH) << "Back: [b]" << setw(COLUMN_WIDTH) << "Quit: [q]" << endl;
+        }
+
+        cout << endl << "Press the appropriate key to the function you'd like to access: ";
+        cin >> commandIn;
+
+        if (!checkInput(1)) {
+            commandIn = '\0';
+            continue;
+        }
+        switch (commandIn) {
+            case '1': {
+                commandIn = airportInfoMenu();
+                break;
+            }
+            case '2': {
+                //TODO: General Information functions
+                //commandIn = generalInfoMenu();
+                break;
+            }
+            case 'b': {
+                return '\0';
+            }
+            case 'q': {
+                cout << "Thank you for using our Air Transport Lookup System!" << endl;
+                break;
+            }
+            default:
+                cout << "Please press one of listed keys." << endl;
+                break;
+        }
+    }
+    return commandIn;
+}
+
+
+/**
+ * Checks if the input given by the user is appropriate or not
+ * Time Complexity: O(1)
+ * @param checkLength - Integer indicating if the length of the input should be checked or not, and, if so, its valid max length
+ * @return Returns true if the input is appropriate and false if it isn't
+ */
+bool Menu::checkInput(unsigned int checkLength) {
+
+    //checkLength = 0 Don't check length
+    //checkLength = 1 Check for length 1
+    //checkLength = 2 Check for max length 2
+    //...
+
+    if (!cin) // User didn't input what expected
+    {
+        cin.clear(); // Reset failbit
+        cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); //Skip bad input
+        cout << "Please enter an appropriate input." << endl;
+        return false;
+    }
+
+    if (checkLength > 0) {
+        string line;
+        getline(cin, line);
+        if (line.length() >= checkLength) {
+            cout << "Please enter an appropriate input." << endl;
+            return false;
+        }
+    }
+    return true;
+}
+
+void Menu::initializeMenu() {
+    extractFileInfo();
+    mainMenu();
+    //TODO: Add destructor (?)
+}
 
