@@ -205,16 +205,16 @@ void Menu::mainMenu() {
         }
     }
 }
+
 /**
  * Outputs airline restrictions menu screen and returns a set containing all the valid airlines for the given inputs
  * //TODO: Time Complexity
  * @return - unordered_set<Airline> containing all the valid airlines for the flight
  *
  */
-list<Airline> Menu::airlineRestrictionsMenu() {
-    //TODO: CHANGE TO UNORDERED_SET
+tableAirline Menu::airlineRestrictionsMenu() {
     unsigned char commandIn;
-    //unordered_set<Airline> validAirlines;
+    tableAirline validAirlines;
 
     cout << setw(COLUMN_WIDTH) << setfill(' ') << "Any airline: [1]" << setw(COLUMN_WIDTH)
          << "One airline: [2]" << setw(COLUMN_WIDTH) << "Several airlines: [3]" << endl;
@@ -228,17 +228,20 @@ list<Airline> Menu::airlineRestrictionsMenu() {
         }
         switch (commandIn) {
             case '1': {
-                //TODO: Change to unordered_set of Airlines
-                //TODO: Return whole set
+                return graph.getAirlines();
             }
             case '2': {
                 string code;
                 cout << "Please enter the code of your preferred airline: ";
                 cin >> code;
                 if (!checkInput(3)) break;
-                //TODO: Check if Airline exists
-                //TODO: Add Airline to validAirlines
-                //return validAirlines;
+                auto airlineIt = graph.getAirlines().find(Airline(code));
+                if (airlineIt == graph.getAirlines().end()) {
+                    //TODO: Add Airline not found message
+                    break;
+                }
+                validAirlines.insert(*airlineIt);
+                return validAirlines;
             }
             case '3': {
                 string code;
@@ -248,12 +251,16 @@ list<Airline> Menu::airlineRestrictionsMenu() {
 
                 while (code != "q") {
                     if (!checkInput(3)) break;
-                    //TODO: Check if Airline exists
-                    //TODO: Add Airline to validAirlines
+                    auto airlineIt = graph.getAirlines().find(Airline(code));
+                    if (airlineIt == graph.getAirlines().end()) {
+                        //TODO: Add Airline not found message
+                        break;
+                    }
+                    validAirlines.insert(*airlineIt);
                     cout << "Please enter the code of your preferred airline, or q to finish: ";
                     cin >> code;
                 }
-                //return validAirlines;
+                return validAirlines;
             }
             default:
                 cout << "Please press one of listed keys." << endl;
@@ -383,6 +390,7 @@ unsigned Menu::flightsMenu() {
     }
     return commandIn;
 }
+
 /**
  * Outputs airport information menu screen and decides graph function calls according to user input
  * @return - Last inputted command, or '\0' for previous menu command
@@ -397,12 +405,14 @@ unsigned Menu::airportInfoMenu() {
             cout << setw(COLUMN_WIDTH * COLUMNS_PER_LINE / 2) << left << "FOMARTION" << endl;
 
             cout << setw(COLUMN_WIDTH) << setfill(' ') << "Number of flights: [1]" << setw(COLUMN_WIDTH)
-                 << "Number of different airlines: [2]" << setw(COLUMN_WIDTH) << "Number of different destinations: [3]"
+                 << "Number of different airlines: [2]" << setw(COLUMN_WIDTH)
+                 << "Number of different destinations: [3]"
                  << endl;
             cout << setw(COLUMN_WIDTH) << "Number of reachable countries: [4]" << setw(COLUMN_WIDTH)
                  << "Number of airports reachable within x flights: [5]" << setw(COLUMN_WIDTH)
                  << "Number of cities reachable within x flights: [6]" << endl;
-            cout << setw(COLUMN_WIDTH) << "Number of countries reachable within x flights: [7]" << setw(COLUMN_WIDTH)
+            cout << setw(COLUMN_WIDTH) << "Number of countries reachable within x flights: [7]"
+                 << setw(COLUMN_WIDTH)
                  << "Back: [b]" << setw(COLUMN_WIDTH) << "Quit: [q]" << endl;
         }
 
@@ -531,7 +541,8 @@ unsigned Menu::infoMenu() {
             cout << setw(COLUMN_WIDTH * COLUMNS_PER_LINE / 2) << setfill('-') << right << "INFOR";
             cout << setw(COLUMN_WIDTH * COLUMNS_PER_LINE / 2) << left << "MATION" << endl;
 
-            cout << setw(COLUMN_WIDTH) << setfill(' ') << "Information on a given airport: [1]" << setw(COLUMN_WIDTH)
+            cout << setw(COLUMN_WIDTH) << setfill(' ') << "Information on a given airport: [1]"
+                 << setw(COLUMN_WIDTH)
                  << "Information on the global network: [2]" << endl;
             cout << setw(COLUMN_WIDTH) << "Back: [b]" << setw(COLUMN_WIDTH) << "Quit: [q]" << endl;
         }

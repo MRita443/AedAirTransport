@@ -1,5 +1,7 @@
 #include "airport.h"
 
+Airport::Airport() = default;
+
 Airport::Airport(std::string const &code, std::string const &name, std::string const &city, std::string const &country,
                  float const &latitude,
                  float const &longitude) {

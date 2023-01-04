@@ -42,7 +42,7 @@ public:
 
     static bool checkInput(unsigned int checkLength = 0);
 
-    list<Airline> airlineRestrictionsMenu();
+    tableAirline airlineRestrictionsMenu();
 
     unsigned int airportInfoMenu();
 };

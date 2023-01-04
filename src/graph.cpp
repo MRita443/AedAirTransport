@@ -11,12 +11,13 @@ Graph::Graph(int num) : n(num), nodes(num + 1) {
  * Time Complexity: O(1)
  * @param src - Number of the source node
  * @param dest - Number of the destination node
- * @param airlines - List of pointers to the Airlines whose flights connect the two nodes (Airports)
+ * @param connectingAirlines - List of Airlines whose flights connect the two nodes (Airports)
  */
-void Graph::addEdge(int src, int dest, list<Airline *> airlines) {
+void Graph::addEdge(int src, int dest, list<Airline> connectingAirlines) {
     if (src < 1 || src > n || dest < 1 || dest > n) return;
-    nodes[src].adj.push_back({dest, airlines});
+    nodes[src].adj.push_back({dest, connectingAirlines});
 }
+
 /**
  * Adds an edge to the graph
  * Time Complexity: O(1)
@@ -24,9 +25,9 @@ void Graph::addEdge(int src, int dest, list<Airline *> airlines) {
  * @param dest - Number of the destination node
  * @param airline - Pointer to an Airlines whose flight connects the two nodes (Airports)
  */
-void Graph::addEdge(int src, int dest, Airline *airline) {
+void Graph::addEdge(int src, int dest, Airline airline) {
     if (src < 1 || src > n || dest < 1 || dest > n) return;
-    nodes[src].adj.push_back({dest, list<Airline *>({airline})});
+    nodes[src].adj.push_back({dest, list<Airline>({airline})});
 }
 
 /**
@@ -40,7 +41,7 @@ void Graph::addEdge(int src, int dest, Airline *airline) {
  * @param longitude - Longitude of the new Airport
  */
 void Graph::addNode(string code, string name, string city, string country, float latitude, float longitude) {
-    nodes.push_back({new Airport(code, name, city, country, latitude, longitude)});
+    nodes.push_back({Airport(code, name, city, country, latitude, longitude)});
     airportToNode[code] = ++n;
 }
 
@@ -68,12 +69,12 @@ void Graph::setAirportToNode(const unordered_map<string, int> &airportToNode) {
     Graph::airportToNode = airportToNode;
 }
 
-const unordered_map<string, Airline *> &Graph::getCodeToAirline() const {
-    return codeToAirline;
+const tableAirline &Graph::getAirlines() const {
+    return airlines;
 }
 
-void Graph::setCodeToAirline(const unordered_map<string, Airline *> &codeToAirline) {
-    Graph::codeToAirline = codeToAirline;
+void Graph::setAirlines(const tableAirline &airlines) {
+    Graph::airlines = airlines;
 }
 
 /**
@@ -86,5 +87,6 @@ void Graph::setCodeToAirline(const unordered_map<string, Airline *> &codeToAirli
  * @param country - Country of the new Airline
  */
 void Graph::addAirlineEntry(string code, string name, string callsign, string country) {
-    codeToAirline[code] = new Airline(code, name, callsign, country);
+    airlines.insert(Airline(code, name, callsign, country));
 }
+

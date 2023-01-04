@@ -12,6 +12,7 @@ private:
     std::string country;
     Position location = Position(0, 0);
 public:
+    Airport();
     Airport(const std::string &code, const std::string &name, const std::string &city, const std::string &country,
             const float &latitude, const float &longitude);
 };
