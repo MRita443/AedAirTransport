@@ -25,8 +25,8 @@ class Graph {
 
     int n;              // Graph size (vertices are numbered from 1 to n)
     vector<Node> nodes; // The list of nodes being represented
-    unordered_map<string, int> airportToNode;
-    tableAirline airlines;
+    airportMap<string> airportToNode;
+    airlineTable airlines;
 
 public:
     // Constructor: nr nodes and direction (default: undirected)
@@ -54,13 +54,13 @@ public:
 
     void setNodes(const vector<Node> &nodes);
 
-    const unordered_map<string, int> &getAirportToNode() const;
+    const airportMap<string> &getAirportToNode() const;
 
-    void setAirportToNode(const unordered_map<string, int> &airportToNode);
+    void setAirportToNode(const airportMap<string> &airportToNode);
 
-    const tableAirline &getAirlines() const;
+    const airlineTable &getAirlines() const;
 
-    void setAirlines(const tableAirline &airlines);
+    void setAirlines(const airlineTable &airlines);
 
     void addAirlineEntry(string code, string name, string callsign, string country);
 

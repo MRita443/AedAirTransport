@@ -41,8 +41,9 @@ void Graph::addEdge(int src, int dest, Airline airline) {
  * @param longitude - Longitude of the new Airport
  */
 void Graph::addNode(string code, string name, string city, string country, float latitude, float longitude) {
-    nodes.push_back({Airport(code, name, city, country, latitude, longitude)});
-    airportToNode[code] = ++n;
+    Airport newAirport = Airport(code, name, city, country, latitude, longitude);
+    nodes.push_back({newAirport});
+    airportToNode[newAirport] = ++n;
 }
 
 int Graph::getN() const {
@@ -61,19 +62,19 @@ void Graph::setNodes(const vector<Node> &nodes) {
     Graph::nodes = nodes;
 }
 
-const unordered_map<string, int> &Graph::getAirportToNode() const {
+const airportMap<string> &Graph::getAirportToNode() const {
     return airportToNode;
 }
 
-void Graph::setAirportToNode(const unordered_map<string, int> &airportToNode) {
+void Graph::setAirportToNode(const airportMap<string> &airportToNode) {
     Graph::airportToNode = airportToNode;
 }
 
-const tableAirline &Graph::getAirlines() const {
+const airlineTable &Graph::getAirlines() const {
     return airlines;
 }
 
-void Graph::setAirlines(const tableAirline &airlines) {
+void Graph::setAirlines(const airlineTable &airlines) {
     Graph::airlines = airlines;
 }
 

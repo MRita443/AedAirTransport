@@ -44,6 +44,6 @@ struct AirlineEquals {
     }
 };
 
-typedef std::unordered_set<Airline, AirlineHash, AirlineEquals> tableAirline;
+typedef std::unordered_set<Airline, AirlineHash, AirlineEquals> airlineTable;
 
 #endif

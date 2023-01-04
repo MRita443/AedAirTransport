@@ -11,10 +11,12 @@
 #include <sstream>
 #include <unordered_set>
 #include "graph.h"
+#include "dataRepository.h"
 
 class Menu {
 private:
     Graph graph = Graph(0);
+    DataRepository dataRepository;
     string static const airlinesFilePath;
     string static const airportsFilePath;
     string static const flightsFilePath;
@@ -42,7 +44,7 @@ public:
 
     static bool checkInput(unsigned int checkLength = 0);
 
-    tableAirline airlineRestrictionsMenu();
+    airlineTable airlineRestrictionsMenu();
 
     unsigned int airportInfoMenu();
 };

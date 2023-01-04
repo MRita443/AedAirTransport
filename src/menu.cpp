@@ -152,8 +152,9 @@ void Menu::extractFlightsFile() {
                 }
             }
             if (counter == 0) {
-                graph.addEdge(graph.getAirportToNode().at(source),
-                              graph.getAirportToNode().at(target), graph.getCodeToAirline().at(airlineCode));
+                //graph.addEdge(graph.getAirportToNode().at(Airport(source)),
+                           //   graph.getAirportToNode().at(Airport(target)),
+                             // *graph.getAirlines().find(Airline(airlineCode)));
             }
         }
     }
@@ -212,9 +213,9 @@ void Menu::mainMenu() {
  * @return - unordered_set<Airline> containing all the valid airlines for the flight
  *
  */
-tableAirline Menu::airlineRestrictionsMenu() {
+airlineTable Menu::airlineRestrictionsMenu() {
     unsigned char commandIn;
-    tableAirline validAirlines;
+    airlineTable validAirlines;
 
     cout << setw(COLUMN_WIDTH) << setfill(' ') << "Any airline: [1]" << setw(COLUMN_WIDTH)
          << "One airline: [2]" << setw(COLUMN_WIDTH) << "Several airlines: [3]" << endl;
