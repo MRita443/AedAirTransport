@@ -44,7 +44,7 @@ public:
 
     // Breadth-First Search: example implementation
     //TODO: Multi-source BFS
-    void bfs(int v);
+    list<int> shortest_path_bfs(int source, int destination, vector<Airline *> linhas = {});
 
     int getN() const;
 

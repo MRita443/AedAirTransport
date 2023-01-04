@@ -1,5 +1,6 @@
 #include "graph.h"
-
+#include <map>
+#include <algorithm>
 using namespace std;
 
 // Constructor: nr nodes
@@ -87,4 +88,42 @@ void Graph::setCodeToAirline(const unordered_map<string, Airline *> &codeToAirli
  */
 void Graph::addAirlineEntry(string code, string name, string callsign, string country) {
     codeToAirline[code] = new Airline(code, name, callsign, country);
+}
+
+
+list<int> Graph::shortest_path_bfs(int source, int destination, vector<Airline *> linhas = {}){
+    if (source == destination) return {};
+
+    for (int i = 1; i<=this->n; i++) nodes[i].visited = false;
+    
+    vector<int> q;
+    map<int,int> predecessors; // filho->pai
+    nodes[source].visited = true;
+    q.push_back(source);
+    predecessors[source] = 0; // 0 como "nulo"
+    while (!q.empty()){
+        int current = q.back();
+        q.pop_back();
+
+        for (Edge e : nodes[current].adj){
+            int w = e.dest;
+            //inserir código para verificar se as viagens são com as agencias desejadas
+            if (!nodes[w].visited){
+                nodes[w].visited = true;
+                predecessors[w] = current;
+                q.push_back(w);
+            }
+        }
+        if (std::find(q.begin(),q.end(), destination) != q.end()) break;
+    }
+
+    if (!nodes[destination].visited) return {};
+    list<int> travel;
+    int current = destination;
+    do{
+        travel.push_front(current);
+        current = predecessors[current];
+    }while (predecessors[current] != 0);
+
+    return travel;
 }
