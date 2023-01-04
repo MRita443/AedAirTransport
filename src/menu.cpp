@@ -10,7 +10,6 @@ string const Menu::flightsFilePath = "../dataset/flights.csv";
 
 Menu::Menu() = default;
 
-//Extract info from files
 /**
  * Delegates extracting file info, calling the appropriate functions for each file
  */
@@ -160,7 +159,10 @@ void Menu::extractFlightsFile() {
     }
 }
 
-
+/**
+ * Outputs main menu screen and calls other menu screens according to user input
+ * //TODO: Time Complexity
+ */
 void Menu::mainMenu() {
 
     unsigned char commandIn = '\0';
@@ -203,9 +205,14 @@ void Menu::mainMenu() {
         }
     }
 }
-
-//TODO: CHANGE TO UNORDERED_SET
+/**
+ * Outputs airline restrictions menu screen and returns a set containing all the valid airlines for the given inputs
+ * //TODO: Time Complexity
+ * @return - unordered_set<Airline> containing all the valid airlines for the flight
+ *
+ */
 list<Airline> Menu::airlineRestrictionsMenu() {
+    //TODO: CHANGE TO UNORDERED_SET
     unsigned char commandIn;
     //unordered_set<Airline> validAirlines;
 
@@ -255,7 +262,10 @@ list<Airline> Menu::airlineRestrictionsMenu() {
     }
 }
 
-
+/**
+ * Outputs flights menu screen and decides graph function calls according to user input
+ * @return - Last inputted command, or '\0' for previous menu command
+ */
 unsigned Menu::flightsMenu() {
     unsigned char commandIn = '\0';
     list<Airport *> departure, arrival;
@@ -373,7 +383,10 @@ unsigned Menu::flightsMenu() {
     }
     return commandIn;
 }
-
+/**
+ * Outputs airport information menu screen and decides graph function calls according to user input
+ * @return - Last inputted command, or '\0' for previous menu command
+ */
 unsigned Menu::airportInfoMenu() {
     unsigned char commandIn = '\0';
 
@@ -505,6 +518,10 @@ unsigned Menu::airportInfoMenu() {
 
 //unsigned Menu::generalInfoMenu(){}
 
+/**
+ * Outputs information menu screen and calls other menu screens according to user input
+ * @return - Last inputted command, or '\0' for previous menu command
+ */
 unsigned Menu::infoMenu() {
     unsigned char commandIn = '\0';
 
@@ -586,6 +603,7 @@ bool Menu::checkInput(unsigned int checkLength) {
 
 void Menu::initializeMenu() {
     extractFileInfo();
-    //TODO: Add Menu Screens
+    mainMenu();
+    //TODO: Add destructor (?)
 }
 

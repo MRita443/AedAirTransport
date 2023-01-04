@@ -2,6 +2,6 @@
 
 int main() {
     Menu menu;
-    menu.mainMenu();
+    menu.initializeMenu();
     return 0;
 }
