@@ -22,7 +22,7 @@ Menu::extractFileInfo() {
 
 /**
  * Extracts and stores the information of airlines.csv
- * Time Complexity: O(n²) (worst case) | 0(1) (average case), where n is the number of lines of airlines.csv
+ * Time Complexity: O(n²) (worst case) | 0(n) (average case), where n is the number of lines of airlines.csv
  */
 void Menu::extractAirlinesFile() {
 
@@ -58,7 +58,7 @@ void Menu::extractAirlinesFile() {
                 }
             }
             if (counter == 0) {
-                graph.addAirlineEntry(code, name, callsign, country);
+                dataRepository.addAirlineEntry(code, name, callsign, country);
             }
         }
     }
@@ -66,7 +66,7 @@ void Menu::extractAirlinesFile() {
 
 /**
  * Extracts and stores the information of airports.csv
- * Time Complexity: O(n²) (worst case) | 0(1) (average case), where n is the number of lines of airports.csv
+ * Time Complexity: O(n²) (worst case) | 0(n) (average case), where n is the number of lines of airports.csv
  */
 void Menu::extractAirportsFile() {
     {
@@ -111,7 +111,9 @@ void Menu::extractAirportsFile() {
                     }
                 }
                 if (counter == 0) {
-                    graph.addNode(code, name, city, country, latitude, longitude);
+                    Airport newAirport = dataRepository.addAirportEntry(code, name, city, country, latitude, longitude);
+                    graph.addNode(newAirport);
+                    dataRepository.addAirportToCityEntry(city, country, newAirport);
                 }
             }
         }
@@ -153,8 +155,8 @@ void Menu::extractFlightsFile() {
             }
             if (counter == 0) {
                 //graph.addEdge(graph.getAirportToNode().at(Airport(source)),
-                           //   graph.getAirportToNode().at(Airport(target)),
-                             // *graph.getAirlines().find(Airline(airlineCode)));
+                //   graph.getAirportToNode().at(Airport(target)),
+                // *graph.getAirlines().find(Airline(airlineCode)));
             }
         }
     }

@@ -31,19 +31,13 @@ void Graph::addEdge(int src, int dest, Airline airline) {
 }
 
 /**
- * Adds a new node to the graph, creating the corresponding Airport object
+ * Adds a new node to the graph
  * Time Complexity: O(n) (worst case) | O(1) (average case)
- * @param code - Code of the new Airport
- * @param name - Name of the new Airport
- * @param city - City of the new Airport
- * @param country - Country of the new Airport
- * @param latitude - Latitude of the new Airport
- * @param longitude - Longitude of the new Airport
+ * @param airport - Airport the new node will represent
  */
-void Graph::addNode(string code, string name, string city, string country, float latitude, float longitude) {
-    Airport newAirport = Airport(code, name, city, country, latitude, longitude);
-    nodes.push_back({newAirport});
-    airportToNode[newAirport] = ++n;
+void Graph::addNode(Airport airport) {
+    nodes.push_back({airport});
+    airportToNode[airport] = ++n;
 }
 
 int Graph::getN() const {
@@ -78,16 +72,4 @@ void Graph::setAirlines(const airlineTable &airlines) {
     Graph::airlines = airlines;
 }
 
-/**
- * Adds a new entry to codeToAirline, creating the corresponding Airline object
- * Time Complexity: O(n) (worst case) | O(1) (average case)
- *
- * @param code - Code of the new Airline
- * @param name - Name of the new Airline
- * @param callsign - Callsign of the new Airline
- * @param country - Country of the new Airline
- */
-void Graph::addAirlineEntry(string code, string name, string callsign, string country) {
-    airlines.insert(Airline(code, name, callsign, country));
-}
 

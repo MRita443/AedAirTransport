@@ -10,7 +10,23 @@
 #include "airport.h"
 #include "airline.h"
 
-typedef std::unordered_map<std::pair<std::string, std::string>, std::list<Airport>> cityToAirportsMap;
+struct pairCityHash {
+    std::size_t operator()(std::pair<std::string, std::string> const &pair) const {
+        std::size_t h1 = std::hash<std::string>{}(pair.first);
+        std::size_t h2 = std::hash<std::string>{}(pair.second);
+        return h1 ^ (h2 << 1);
+    }
+};
+
+struct pairCityEquals {
+    bool
+    operator()(std::pair<std::string, std::string> const &pair1,
+               std::pair<std::string, std::string> const &pair2) const {
+        return pair1.first == pair2.first && pair1.second == pair2.second;
+    }
+};
+
+typedef std::unordered_map<std::pair<std::string, std::string>, std::list<Airport>, pairCityHash, pairCityEquals> cityToAirportsMap;
 
 class DataRepository {
 private:
@@ -32,12 +48,20 @@ public:
 
     void setCityToAirports(const cityToAirportsMap &cityToAirports);
 
-    std::optional<Airport> findAirport(const std::string& code);
+    std::optional<Airport> findAirport(const std::string &code);
 
-    Airline findAirline(const std::string& code);
+    std::optional<Airline> findAirline(const std::string &code);
 
-    std::list<Airport> findAirportsInCity(const std::string& city, const std::string& country);
+    std::list<Airport> findAirportsInCity(const std::string &city, const std::string &country);
 
+    Airline addAirlineEntry(std::string code, std::string name, std::string callsign, std::string country);
+
+    Airport addAirportEntry(std::string code, std::string name, std::string city, std::string country, float latitude,
+                            float longitude);
+
+    void addAirportToCityEntry(const std::string &city, const std::string &country);
+
+    void addAirportToCityEntry(const std::string &city, const std::string &country, const Airport &airport);
 };
 
 

@@ -37,7 +37,7 @@ public:
 
     void addEdge(int src, int dest, Airline airline);
 
-    void addNode(string code, string name, string city, string country, float latitude, float longitude);
+    void addNode(Airport airport);
 
     // Depth-First Search: example implementation
     //void dfs(int v);
@@ -62,14 +62,10 @@ public:
 
     void setAirlines(const airlineTable &airlines);
 
-    void addAirlineEntry(string code, string name, string callsign, string country);
 
     // ----- Functions to implement in this class -----
     //int distance(int a, int b);
     //int diameter();
-
-    //TODO: Add destructor function
-
 };
 
 #endif
