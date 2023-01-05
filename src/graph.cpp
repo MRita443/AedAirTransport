@@ -56,11 +56,16 @@ void Graph::setNodes(const vector<Node> &nodes) {
     Graph::nodes = nodes;
 }
 
-const airportMap<string> &Graph::getAirportToNode() const {
+int Graph::findAirportNode(const string &code) {
+    auto it = airportToNode.find(Airport(code));
+    return it != airportToNode.end() ? it->second : 0;
+}
+
+const airportMap<int> &Graph::getAirportToNode() const {
     return airportToNode;
 }
 
-void Graph::setAirportToNode(const airportMap<string> &airportToNode) {
+void Graph::setAirportToNode(const airportMap<int> &airportToNode) {
     Graph::airportToNode = airportToNode;
 }
 

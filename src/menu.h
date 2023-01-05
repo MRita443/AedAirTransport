@@ -47,6 +47,10 @@ public:
     airlineTable airlineRestrictionsMenu();
 
     unsigned int airportInfoMenu();
+
+    static void airportDoesntExist();
+
+    static void airlineDoesntExist();
 };
 
 #endif

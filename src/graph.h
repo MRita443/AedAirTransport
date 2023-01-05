@@ -25,7 +25,7 @@ class Graph {
 
     int n;              // Graph size (vertices are numbered from 1 to n)
     vector<Node> nodes; // The list of nodes being represented
-    airportMap<string> airportToNode;
+    airportMap<int> airportToNode;
     airlineTable airlines;
 
 public:
@@ -54,9 +54,9 @@ public:
 
     void setNodes(const vector<Node> &nodes);
 
-    const airportMap<string> &getAirportToNode() const;
+    const airportMap<int> &getAirportToNode() const;
 
-    void setAirportToNode(const airportMap<string> &airportToNode);
+    void setAirportToNode(const airportMap<int> &airportToNode);
 
     const airlineTable &getAirlines() const;
 
@@ -66,6 +66,7 @@ public:
     // ----- Functions to implement in this class -----
     //int distance(int a, int b);
     //int diameter();
+    int findAirportNode(const string &code);
 };
 
 #endif

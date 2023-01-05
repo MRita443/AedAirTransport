@@ -129,7 +129,7 @@ void Menu::extractFlightsFile() {
     ifstream flights(flightsFilePath);
 
     string currentParam, currentLine;
-    string source, target, airlineCode;
+    string sourceCode, targetCode, airlineCode;
 
     int counter = 0;
 
@@ -140,11 +140,11 @@ void Menu::extractFlightsFile() {
         while (getline(iss, currentParam, ',')) {
             switch (counter++) {
                 case 0: {
-                    source = currentParam;
+                    sourceCode = currentParam;
                     break;
                 }
                 case 1: {
-                    target = currentParam;
+                    targetCode = currentParam;
                     break;
                 }
                 case 2: {
@@ -154,12 +154,21 @@ void Menu::extractFlightsFile() {
                 }
             }
             if (counter == 0) {
-                //graph.addEdge(graph.getAirportToNode().at(Airport(source)),
-                //   graph.getAirportToNode().at(Airport(target)),
-                // *graph.getAirlines().find(Airline(airlineCode)));
+                int sourceNode = graph.findAirportNode(sourceCode);
+                int targetNode = graph.findAirportNode(targetCode);
+                optional<Airline> airline = dataRepository.findAirline(airlineCode);
+                graph.addEdge(sourceNode, targetNode, airline.value());
             }
         }
     }
+}
+
+void Menu::airportDoesntExist() {
+    cout << "An airport with this code doesn't exist!" << endl;
+}
+
+void Menu::airlineDoesntExist() {
+    cout << "An airline with this code doesn't exist!" << endl;
 }
 
 /**
