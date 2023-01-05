@@ -99,4 +99,8 @@ list<Airport> DataRepository::findAirportsInCity(const std::string &city, const 
     return cityToAirports.at({city, country});
 }
 
+bool DataRepository::checkValidCityCountry(const std::string &city, const std::string &country){
+    return cityToAirports.find({city, country}) != cityToAirports.end();
+}
+
 

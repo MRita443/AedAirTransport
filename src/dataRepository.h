@@ -62,6 +62,8 @@ public:
     void addAirportToCityEntry(const std::string &city, const std::string &country);
 
     void addAirportToCityEntry(const std::string &city, const std::string &country, const Airport &airport);
+
+    bool checkValidCityCountry(const std::string &city, const std::string &country);
 };
 
 
