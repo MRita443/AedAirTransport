@@ -666,6 +666,9 @@ bool Menu::checkInput(unsigned int checkLength) {
     return true;
 }
 
+/**
+ * Delegates initialization of the menu, calling the appropriate functions for information extraction and output
+ */
 void Menu::initializeMenu() {
     extractFileInfo();
     mainMenu();

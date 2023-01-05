@@ -7,6 +7,7 @@
 
 #include <list>
 #include <optional>
+#include <algorithm>
 #include "airport.h"
 #include "airline.h"
 
@@ -59,11 +60,10 @@ public:
     Airport addAirportEntry(std::string code, std::string name, std::string city, std::string country, float latitude,
                             float longitude);
 
-    void addAirportToCityEntry(const std::string &city, const std::string &country);
-
     void addAirportToCityEntry(const std::string &city, const std::string &country, const Airport &airport);
 
     bool checkValidCityCountry(const std::string &city, const std::string &country);
+
 };
 
 

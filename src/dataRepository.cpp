@@ -81,13 +81,22 @@ void DataRepository::setCityToAirports(const cityToAirportsMap &cityToAirports) 
     DataRepository::cityToAirports = cityToAirports;
 }
 
+/**
+ * Finds the Airport object with the given code
+ * @param code - Code of the Airport to be returned
+ * @return optional<Airport> value which will contain the Airport object, or be empty if no such Airport was found
+ */
 std::optional<Airport> DataRepository::findAirport(const string &code) {
     std::optional<Airport> result;
     auto it = airports.find(Airport(code));
     if (it != airports.end()) result = *it;
     return result;
 }
-
+/**
+ * Finds the Airline object with the given code
+ * @param code - Code of the Airline to be returned
+ * @return optional<Airline> value which will contain the Airline object, or be empty if no such Airline was found
+ */
 std::optional<Airline> DataRepository::findAirline(const string &code) {
     std::optional<Airline> result;
     auto it = airlines.find(Airline(code));
@@ -95,10 +104,22 @@ std::optional<Airline> DataRepository::findAirline(const string &code) {
     return result;
 }
 
+/**
+ * Finds the Airport objects with the given city
+ * @param city - City whose airports should be found
+ * @param country - Country the city belongs to (used to differentiate same name cities)
+ * @return list<Airport> containing the Airports in the given city
+ */
 list<Airport> DataRepository::findAirportsInCity(const std::string &city, const std::string &country) {
     return cityToAirports.at({city, country});
 }
 
+/**
+ * Checks if the given city and country combination is valid, that is, if there is stored data referencing it
+ * @param city - City to be validated
+ * @param country - Country to be validated
+ * @return true if the combination is valid, false if it is not
+ */
 bool DataRepository::checkValidCityCountry(const std::string &city, const std::string &country){
     return cityToAirports.find({city, country}) != cityToAirports.end();
 }

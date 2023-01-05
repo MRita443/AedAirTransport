@@ -14,7 +14,7 @@ using namespace std;
 class Graph {
     struct Edge {
         int dest;   // Destination node
-        list<Airline> airlines; // An integer weight
+        airlineTable airlines; // The airlines whose flights connect the two nodes
     };
 
     struct Node {
@@ -33,11 +33,11 @@ public:
     explicit Graph(int nodes);
 
     // Add edge from source to destination with a certain weight
-    void addEdge(int src, int dest, list<Airline> connectingAirlines);
+    void addEdge(int src, int dest, const airlineTable &connectingAirlines);
 
-    void addEdge(int src, int dest, Airline airline);
+    void addEdge(int src, int dest, const Airline &airline);
 
-    void addNode(Airport airport);
+    void addNode(const Airport &airport);
 
     // Depth-First Search: example implementation
     //void dfs(int v);
