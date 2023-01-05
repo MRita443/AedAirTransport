@@ -22,3 +22,17 @@ float Position::getLongitude() const {
 void Position::setLongitude(float longitude) {
     Position::longitude = longitude;
 }
+
+double Position::getDistance(Position position) {
+    double radianLatDist = this->latitude + position.getLatitude() * M_PI / 180.0;
+    double radianLonDist = this->longitude + position.getLongitude() * M_PI / 180.0;
+    double radianLat1 = this->latitude * M_PI / 180.0;
+    double radianLat2 = position.getLatitude() * M_PI / 180.0;
+
+    double tempCalc = pow(sin(radianLatDist / 2), 2) + pow(sin(radianLonDist / 2), 2) * cos(radianLat1) * cos(radianLat2);
+    double rad = 6371;
+    double distanceValue = rad * 2 * asin(sqrt(tempCalc));
+
+    return distanceValue;
+
+}
