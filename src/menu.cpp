@@ -240,19 +240,19 @@ airlineTable Menu::airlineRestrictionsMenu() {
         }
         switch (commandIn) {
             case '1': {
-                return graph.getAirlines();
+                return dataRepository.getAirlines();
             }
             case '2': {
                 string code;
                 cout << "Please enter the code of your preferred airline: ";
                 cin >> code;
                 if (!checkInput(3)) break;
-                auto airlineIt = graph.getAirlines().find(Airline(code));
-                if (airlineIt == graph.getAirlines().end()) {
-                    //TODO: Add Airline not found message
+                optional<Airline> airline = dataRepository.findAirline(code);
+                if (!airline.has_value()) {
+                    airlineDoesntExist();
                     break;
                 }
-                validAirlines.insert(*airlineIt);
+                validAirlines.insert(airline.value());
                 return validAirlines;
             }
             case '3': {
@@ -263,12 +263,12 @@ airlineTable Menu::airlineRestrictionsMenu() {
 
                 while (code != "q") {
                     if (!checkInput(3)) break;
-                    auto airlineIt = graph.getAirlines().find(Airline(code));
-                    if (airlineIt == graph.getAirlines().end()) {
-                        //TODO: Add Airline not found message
+                    optional<Airline> airline = dataRepository.findAirline(code);
+                    if (!airline.has_value()) {
+                        airlineDoesntExist();
                         break;
                     }
-                    validAirlines.insert(*airlineIt);
+                    validAirlines.insert(airline.value());
                     cout << "Please enter the code of your preferred airline, or q to finish: ";
                     cin >> code;
                 }
@@ -287,12 +287,11 @@ airlineTable Menu::airlineRestrictionsMenu() {
  */
 unsigned Menu::flightsMenu() {
     unsigned char commandIn = '\0';
-    list<Airport *> departure, arrival;
-
+    list<Airport> departure, arrival;
 
     while (commandIn != 'q') {
 
-        bool validFirstInput;
+        bool validFirstInput = false, validFullInput = false;
 
         if (commandIn == '\0') {
             //Header
@@ -320,16 +319,18 @@ unsigned Menu::flightsMenu() {
                     cin >> airportCode;
                     if (!checkInput(3)) break;
 
-                    //TODO: Check if Airport exists
+                    optional<Airport> airport = dataRepository.findAirport(airportCode);
+                    if (!airport.has_value()) {
+                        airportDoesntExist();
+                        break;
+                    }
                     if (currentSelection == "departure") {
-                        departure = {//TODO: Get Airport by Code
-                        };
+                        departure.push_back(airport.value());
                         validFirstInput = true;
-                    } else
-                        arrival = {//TODO: Get Airport by Code
-                        };
-                    //unordered_set<Airline> validAirlines = airlineRestrictionsMenu();
-                    //TODO: Get shortest flight with given airlines
+                    } else if (validFirstInput) {
+                        arrival.push_back(airport.value());
+                        validFullInput = true;
+                    }
                     break;
                 }
                 case '2': {
@@ -346,15 +347,12 @@ unsigned Menu::flightsMenu() {
                     //TODO: Check if the city exists in this country
 
                     if (currentSelection == "departure") {
-                        departure = {//TODO: Get Airport by City
-                        };
+                        departure = dataRepository.findAirportsInCity(city, country);
                         validFirstInput = true;
-                    } else
-                        arrival = {//TODO: Get Airport by City
-                        };
-
-                    //unordered_set<Airline> validAirlines = airlineRestrictionsMenu();
-                    //TODO: Get shortest flight with given airlines
+                    } else if (validFirstInput) {
+                        arrival = dataRepository.findAirportsInCity(city, country);
+                        validFullInput = true;
+                    }
                     break;
                 }
                 case '3': {
@@ -380,11 +378,11 @@ unsigned Menu::flightsMenu() {
                         departure = {//TODO: Get Airport by location
                         };
                         validFirstInput = true;
-                    } else
+                    } else if (validFirstInput) {
                         arrival = {//TODO: Get Airport by location
                         };
-                    //unordered_set<Airline> validAirlines = airlineRestrictionsMenu();
-                    //TODO: Get shortest flight with given airlines
+                        validFullInput = true;
+                    }
                     break;
                 }
                 case 'b': {
@@ -398,6 +396,11 @@ unsigned Menu::flightsMenu() {
                     cout << "Please press one of listed keys." << endl;
                     break;
             }
+        }
+
+        if (validFullInput) {
+            airlineTable validAirlines = airlineRestrictionsMenu();
+            //TODO: Get shortest flight with given airlines
         }
     }
     return commandIn;
