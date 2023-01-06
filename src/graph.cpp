@@ -90,40 +90,69 @@ void Graph::addAirlineEntry(string code, string name, string callsign, string co
     codeToAirline[code] = new Airline(code, name, callsign, country);
 }
 
+/**
+ * Builds a list with the available airlines for a flight, removing the unwanted airlines.
+ * Time Complexity: O(n^2)
+ * 
+ * @param available - List with available airlines for the flight
+ * @param avoid - List with unwanted airlines
+ */
+list<Airline *> avoid_airlines(list<Airline *> available, list<Airline *> avoid){
+    auto it = available.begin();
+    while (it != available.end()){
+        auto curr = it;
+        it++;
+        if (find(avoid.begin(),avoid.end(),*curr) != avoid.end()) available.erase(curr);
+    }
+    return available;
+}
 
-list<int> Graph::shortest_path_bfs(int source, int destination, vector<Airline *> linhas = {}){
-    if (source == destination) return {};
+/**
+ * Finds one of the routes with several flights that has the minimum ammount of flights.
+ * Time Complexity: O(V+E) //TODO verifiquem-me isto pls (como tem o avoid_airlines() a meio tbm passa a O(n^2), não?)
+ * 
+ * @param source - Airport where the travel begins
+ * @param destination - Airport where the travel ends
+ * @param avoid - List of Airlines that are to avoid
+ */
+list<pair<int,list<Airline *>>> Graph::shortest_path_bfs(vector<int> source, int destination, list<Airline *> avoid = {}){
+    if (std::find(source.begin(),source.end(), destination) != source.end()) return {};
 
-    for (int i = 1; i<=this->n; i++) nodes[i].visited = false;
+    for (int i = 1; i<=this->n; i++) nodes[i].predecessing_trip = {-1,{}};
     
     vector<int> q;
-    map<int,int> predecessors; // filho->pai
-    nodes[source].visited = true;
-    q.push_back(source);
-    predecessors[source] = 0; // 0 como "nulo"
+    for (int n : source){
+        q.push_back(n);
+        nodes[n].visited = true;
+        nodes[n].predecessing_trip.first = 0; // 0 como "nulo"
+    }
+    
     while (!q.empty()){
-        int current = q.back();
+        int u = q.back();
         q.pop_back();
 
-        for (Edge e : nodes[current].adj){
+        for (Edge e : nodes[u].adj){
             int w = e.dest;
-            //inserir código para verificar se as viagens são com as agencias desejadas
-            if (!nodes[w].visited){
+            list<Airline *> airlines = e.airlines;
+            list<Airline *> available_airlines = avoid_airlines(airlines,avoid);
+            if (!nodes[w].visited && !available_airlines.empty()){  
                 nodes[w].visited = true;
-                predecessors[w] = current;
+                nodes[w].predecessing_trip = {u,available_airlines};
                 q.push_back(w);
             }
         }
+        
         if (std::find(q.begin(),q.end(), destination) != q.end()) break;
     }
 
     if (!nodes[destination].visited) return {};
-    list<int> travel;
+
+    list<pair<int,list<Airline *>>> travel;
     int current = destination;
     do{
-        travel.push_front(current);
-        current = predecessors[current];
-    }while (predecessors[current] != 0);
+        travel.push_front(nodes[current].predecessing_trip);
+        current = nodes[current].predecessing_trip.first;
+    }while (nodes[current].predecessing_trip.first != 0);
 
     return travel;
 }

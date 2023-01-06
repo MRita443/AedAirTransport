@@ -21,6 +21,7 @@ class Graph {
         Airport *airport; //The Airport this node represents
         list<Edge> adj; // The list of outgoing edges (to adjacent nodes)
         bool visited;   // As the node been visited on a search?
+        pair<int,list<Airline *>> predecessing_trip; // The node that connected to this node
     };
 
     int n;              // Graph size (vertices are numbered from 1 to n)
@@ -44,7 +45,7 @@ public:
 
     // Breadth-First Search: example implementation
     //TODO: Multi-source BFS
-    list<int> shortest_path_bfs(int source, int destination, vector<Airline *> linhas = {});
+    list<pair<int,list<Airline *>>> shortest_path_bfs(vector<int> source, int destination, list<Airline *> avoid = {});
 
     int getN() const;
 
