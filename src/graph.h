@@ -14,30 +14,30 @@ using namespace std;
 class Graph {
     struct Edge {
         int dest;   // Destination node
-        list<Airline *> airlines; // An integer weight
+        airlineTable airlines; // The airlines whose flights connect the two nodes
     };
 
     struct Node {
-        Airport *airport; //The Airport this node represents
+        Airport airport; //The Airport this node represents
         list<Edge> adj; // The list of outgoing edges (to adjacent nodes)
         bool visited;   // As the node been visited on a search?
     };
 
     int n;              // Graph size (vertices are numbered from 1 to n)
     vector<Node> nodes; // The list of nodes being represented
-    unordered_map<string, int> airportToNode;
-    unordered_map<string, Airline *> codeToAirline;
+    airportMap<int> airportToNode;
+    airlineTable airlines;
 
 public:
     // Constructor: nr nodes and direction (default: undirected)
     explicit Graph(int nodes);
 
     // Add edge from source to destination with a certain weight
-    void addEdge(int src, int dest, list<Airline *> airlines);
+    void addEdge(int src, int dest, const airlineTable &connectingAirlines);
 
-    void addEdge(int src, int dest, Airline *airline);
+    void addEdge(int src, int dest, const Airline &airline);
 
-    void addNode(string code, string name, string city, string country, float latitude, float longitude);
+    void addNode(const Airport &airport);
 
     // Depth-First Search: example implementation
     //void dfs(int v);
@@ -54,22 +54,19 @@ public:
 
     void setNodes(const vector<Node> &nodes);
 
-    const unordered_map<string, int> &getAirportToNode() const;
+    const airportMap<int> &getAirportToNode() const;
 
-    void setAirportToNode(const unordered_map<string, int> &airportToNode);
+    void setAirportToNode(const airportMap<int> &airportToNode);
 
-    const unordered_map<string, Airline *> &getCodeToAirline() const;
+    const airlineTable &getAirlines() const;
 
-    void setCodeToAirline(const unordered_map<string, Airline *> &codeToAirline);
+    void setAirlines(const airlineTable &airlines);
 
-    void addAirlineEntry(string code, string name, string callsign, string country);
 
     // ----- Functions to implement in this class -----
     //int distance(int a, int b);
     //int diameter();
-
-    //TODO: Add destructor function
-
+    int findAirportNode(const string &code);
 };
 
 #endif
