@@ -1,6 +1,8 @@
 #ifndef POSITION_H
 #define POSITION_H
 
+#include <cmath>
+
 class Position {
 private:
     float latitude;
@@ -16,7 +18,7 @@ public:
 
     void setLongitude(float longitude);
 
-    //TODO: Distance function
+    double getDistance(Position position) const;
 };
 
 #endif

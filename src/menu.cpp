@@ -22,7 +22,7 @@ Menu::extractFileInfo() {
 
 /**
  * Extracts and stores the information of airlines.csv
- * Time Complexity: O(n²) (worst case) | 0(1) (average case), where n is the number of lines of airlines.csv
+ * Time Complexity: O(n²) (worst case) | 0(n) (average case), where n is the number of lines of airlines.csv
  */
 void Menu::extractAirlinesFile() {
 
@@ -58,7 +58,7 @@ void Menu::extractAirlinesFile() {
                 }
             }
             if (counter == 0) {
-                graph.addAirlineEntry(code, name, callsign, country);
+                dataRepository.addAirlineEntry(code, name, callsign, country);
             }
         }
     }
@@ -66,7 +66,7 @@ void Menu::extractAirlinesFile() {
 
 /**
  * Extracts and stores the information of airports.csv
- * Time Complexity: O(n²) (worst case) | 0(1) (average case), where n is the number of lines of airports.csv
+ * Time Complexity: O(n²) (worst case) | 0(n) (average case), where n is the number of lines of airports.csv
  */
 void Menu::extractAirportsFile() {
     {
@@ -111,7 +111,9 @@ void Menu::extractAirportsFile() {
                     }
                 }
                 if (counter == 0) {
-                    graph.addNode(code, name, city, country, latitude, longitude);
+                    Airport newAirport = dataRepository.addAirportEntry(code, name, city, country, latitude, longitude);
+                    graph.addNode(newAirport);
+                    dataRepository.addAirportToCityEntry(city, country, newAirport);
                 }
             }
         }
@@ -127,7 +129,7 @@ void Menu::extractFlightsFile() {
     ifstream flights(flightsFilePath);
 
     string currentParam, currentLine;
-    string source, target, airlineCode;
+    string sourceCode, targetCode, airlineCode;
 
     int counter = 0;
 
@@ -138,11 +140,11 @@ void Menu::extractFlightsFile() {
         while (getline(iss, currentParam, ',')) {
             switch (counter++) {
                 case 0: {
-                    source = currentParam;
+                    sourceCode = currentParam;
                     break;
                 }
                 case 1: {
-                    target = currentParam;
+                    targetCode = currentParam;
                     break;
                 }
                 case 2: {
@@ -152,11 +154,27 @@ void Menu::extractFlightsFile() {
                 }
             }
             if (counter == 0) {
-                graph.addEdge(graph.getAirportToNode().at(source),
-                              graph.getAirportToNode().at(target), graph.getCodeToAirline().at(airlineCode));
+                int sourceNode = graph.findAirportNode(sourceCode);
+                int targetNode = graph.findAirportNode(targetCode);
+                optional<Airline> airline = dataRepository.findAirline(airlineCode);
+                graph.addEdge(sourceNode, targetNode, airline.value());
             }
         }
     }
+}
+
+/**
+ * Outputs to the screen a message indicating that the given Airport doesn't exist
+ */
+void Menu::airportDoesntExist() {
+    cout << "An airport with this code doesn't exist!" << endl;
+}
+
+/**
+ * Outputs to the screen a message indicating that the given Airline doesn't exist
+ */
+void Menu::airlineDoesntExist() {
+    cout << "An airline with this code doesn't exist!" << endl;
 }
 
 /**
@@ -205,16 +223,16 @@ void Menu::mainMenu() {
         }
     }
 }
+
 /**
  * Outputs airline restrictions menu screen and returns a set containing all the valid airlines for the given inputs
  * //TODO: Time Complexity
  * @return - unordered_set<Airline> containing all the valid airlines for the flight
  *
  */
-list<Airline> Menu::airlineRestrictionsMenu() {
-    //TODO: CHANGE TO UNORDERED_SET
+airlineTable Menu::airlineRestrictionsMenu() {
     unsigned char commandIn;
-    //unordered_set<Airline> validAirlines;
+    airlineTable validAirlines;
 
     cout << setw(COLUMN_WIDTH) << setfill(' ') << "Any airline: [1]" << setw(COLUMN_WIDTH)
          << "One airline: [2]" << setw(COLUMN_WIDTH) << "Several airlines: [3]" << endl;
@@ -228,17 +246,20 @@ list<Airline> Menu::airlineRestrictionsMenu() {
         }
         switch (commandIn) {
             case '1': {
-                //TODO: Change to unordered_set of Airlines
-                //TODO: Return whole set
+                return dataRepository.getAirlines();
             }
             case '2': {
                 string code;
                 cout << "Please enter the code of your preferred airline: ";
                 cin >> code;
                 if (!checkInput(3)) break;
-                //TODO: Check if Airline exists
-                //TODO: Add Airline to validAirlines
-                //return validAirlines;
+                optional<Airline> airline = dataRepository.findAirline(code);
+                if (!airline.has_value()) {
+                    airlineDoesntExist();
+                    break;
+                }
+                validAirlines.insert(airline.value());
+                return validAirlines;
             }
             case '3': {
                 string code;
@@ -248,12 +269,16 @@ list<Airline> Menu::airlineRestrictionsMenu() {
 
                 while (code != "q") {
                     if (!checkInput(3)) break;
-                    //TODO: Check if Airline exists
-                    //TODO: Add Airline to validAirlines
+                    optional<Airline> airline = dataRepository.findAirline(code);
+                    if (!airline.has_value()) {
+                        airlineDoesntExist();
+                        break;
+                    }
+                    validAirlines.insert(airline.value());
                     cout << "Please enter the code of your preferred airline, or q to finish: ";
                     cin >> code;
                 }
-                //return validAirlines;
+                return validAirlines;
             }
             default:
                 cout << "Please press one of listed keys." << endl;
@@ -268,12 +293,11 @@ list<Airline> Menu::airlineRestrictionsMenu() {
  */
 unsigned Menu::flightsMenu() {
     unsigned char commandIn = '\0';
-    list<Airport *> departure, arrival;
-
+    list<Airport> departure, arrival;
 
     while (commandIn != 'q') {
 
-        bool validFirstInput;
+        bool validFirstInput = false, validFullInput = false;
 
         if (commandIn == '\0') {
             //Header
@@ -288,101 +312,116 @@ unsigned Menu::flightsMenu() {
             if (currentSelection == "departure" || validFirstInput) {
                 cout << endl << "Please select how to input your " << currentSelection << " location: ";
                 cin >> commandIn;
+
+
+                if (!checkInput(1)) {
+                    commandIn = '\0';
+                    break;
+                }
+                switch (commandIn) {
+                    case '1': {
+                        string airportCode;
+                        cout << "Please enter the code of your preferred " << currentSelection << " airport: ";
+                        cin >> airportCode;
+                        if (!checkInput(3)) break;
+
+                        optional<Airport> airport = dataRepository.findAirport(airportCode);
+                        if (!airport.has_value()) {
+                            airportDoesntExist();
+                            break;
+                        }
+                        if (currentSelection == "departure") {
+                            departure.push_back(airport.value());
+                            validFirstInput = true;
+                        } else {
+                            arrival.push_back(airport.value());
+                            validFullInput = true;
+                        }
+
+                        break;
+                    }
+                    case '2': {
+                        string city;
+                        cout << "Please enter your preferred city of " << currentSelection << ": ";
+                        cin >> city;
+                        if (!checkInput()) break;
+
+                        string country;
+                        cout << "Please enter the country this city is located in: ";
+                        cin >> country;
+                        if (!checkInput()) break;
+                        if (!dataRepository.checkValidCityCountry(city, country)) {
+                            cout << "This city and country combination is not valid!" << endl;
+                            break;
+                        }
+
+                        if (currentSelection == "departure") {
+                            departure = dataRepository.findAirportsInCity(city, country);
+                            validFirstInput = true;
+                        } else {
+                            arrival = dataRepository.findAirportsInCity(city, country);
+                            validFullInput = true;
+                        }
+
+                        break;
+                    }
+                    case '3': {
+                        float latitude, longitude, maxDistance;
+                        cout << "Please enter the latitude of your preferred " << currentSelection << " location: ";
+                        cin >> latitude;
+                        if (!checkInput()) break;
+                        if (latitude < -90 || latitude > 90) {
+                            cout << "Please enter an appropriate latitude." << endl;
+                            break;
+                        }
+
+                        cout << "Please enter the longitude of your preferred " << currentSelection
+                             << " location: ";
+                        cin >> longitude;
+                        if (!checkInput()) break;
+                        if (longitude < -180 || longitude > 180) {
+                            cout << "Please enter an appropriate latitude." << endl;
+                            break;
+                        }
+
+                        cout << "Please enter the max distance of the airport to your preferred "
+                             << currentSelection
+                             << " location: ";
+                        cin >> maxDistance;
+                        if (!checkInput()) break;
+
+                        if (currentSelection == "departure") {
+                            departure = dataRepository.findAirportsInLocation(latitude, longitude, maxDistance);
+                            validFirstInput = true;
+                        } else {
+                            arrival = dataRepository.findAirportsInLocation(latitude, longitude, maxDistance);
+                            validFullInput = true;
+                        }
+                        break;
+                    }
+                    case 'b': {
+                        return '\0';
+                    }
+                    case 'q': {
+                        cout << "Thank you for using our Air Transport Lookup System!" << endl;
+                        return 'q';
+                    }
+                    default:
+                        cout << "Please press one of listed keys." << endl;
+                        break;
+                }
             }
+        }
 
-            if (!checkInput(1)) {
-                commandIn = '\0';
-                break;
-            }
-            switch (commandIn) {
-                case '1': {
-                    string airportCode;
-                    cout << "Please enter the code of your preferred " << currentSelection << " airport: ";
-                    cin >> airportCode;
-                    if (!checkInput(3)) break;
 
-                    //TODO: Check if Airport exists
-                    if (currentSelection == "departure") {
-                        departure = {//TODO: Get Airport by Code
-                        };
-                        validFirstInput = true;
-                    } else
-                        arrival = {//TODO: Get Airport by Code
-                        };
-                    //unordered_set<Airline> validAirlines = airlineRestrictionsMenu();
-                    //TODO: Get shortest flight with given airlines
-                    break;
-                }
-                case '2': {
-                    string city;
-                    cout << "Please enter your preferred city of " << currentSelection << ": ";
-                    cin >> city;
-                    if (!checkInput()) break;
-                    //TODO: Check if City exists
-
-                    string country;
-                    cout << "Please enter the country this city is located in: ";
-                    cin >> country;
-                    if (!checkInput()) break;
-                    //TODO: Check if the city exists in this country
-
-                    if (currentSelection == "departure") {
-                        departure = {//TODO: Get Airport by City
-                        };
-                        validFirstInput = true;
-                    } else
-                        arrival = {//TODO: Get Airport by City
-                        };
-
-                    //unordered_set<Airline> validAirlines = airlineRestrictionsMenu();
-                    //TODO: Get shortest flight with given airlines
-                    break;
-                }
-                case '3': {
-                    float latitude, longitude, maxDistance;
-                    cout << "Please enter the latitude of your preferred " << currentSelection << " location: ";
-                    cin >> latitude;
-                    if (!checkInput()) break;
-
-                    cout << "Please enter the longitude of your preferred " << currentSelection
-                         << " location: ";
-                    cin >> longitude;
-                    if (!checkInput()) break;
-
-                    //TODO: Check if location is valid
-
-                    cout << "Please enter the max distance of the airport to your preferred "
-                         << currentSelection
-                         << " location: ";
-                    cin >> maxDistance;
-                    if (!checkInput()) break;
-
-                    if (currentSelection == "departure") {
-                        departure = {//TODO: Get Airport by location
-                        };
-                        validFirstInput = true;
-                    } else
-                        arrival = {//TODO: Get Airport by location
-                        };
-                    //unordered_set<Airline> validAirlines = airlineRestrictionsMenu();
-                    //TODO: Get shortest flight with given airlines
-                    break;
-                }
-                case 'b': {
-                    return '\0';
-                }
-                case 'q': {
-                    cout << "Thank you for using our Air Transport Lookup System!" << endl;
-                    return 'q';
-                }
-                default:
-                    cout << "Please press one of listed keys." << endl;
-                    break;
-            }
+        if (validFullInput) {
+            airlineTable validAirlines = airlineRestrictionsMenu();
+            //TODO: Get shortest flight with given airlines
         }
     }
     return commandIn;
 }
+
 /**
  * Outputs airport information menu screen and decides graph function calls according to user input
  * @return - Last inputted command, or '\0' for previous menu command
@@ -397,12 +436,14 @@ unsigned Menu::airportInfoMenu() {
             cout << setw(COLUMN_WIDTH * COLUMNS_PER_LINE / 2) << left << "FOMARTION" << endl;
 
             cout << setw(COLUMN_WIDTH) << setfill(' ') << "Number of flights: [1]" << setw(COLUMN_WIDTH)
-                 << "Number of different airlines: [2]" << setw(COLUMN_WIDTH) << "Number of different destinations: [3]"
+                 << "Number of different airlines: [2]" << setw(COLUMN_WIDTH)
+                 << "Number of different destinations: [3]"
                  << endl;
             cout << setw(COLUMN_WIDTH) << "Number of reachable countries: [4]" << setw(COLUMN_WIDTH)
-                 << "Number of airports reachable within x flights: [5]" << setw(COLUMN_WIDTH)
-                 << "Number of cities reachable within x flights: [6]" << endl;
-            cout << setw(COLUMN_WIDTH) << "Number of countries reachable within x flights: [7]" << setw(COLUMN_WIDTH)
+                 << "Number of airports within x flights: [5]" << setw(COLUMN_WIDTH)
+                 << "Number of cities within x flights: [6]" << endl;
+            cout << setw(COLUMN_WIDTH) << "Number of countries within x flights: [7]"
+                 << setw(COLUMN_WIDTH)
                  << "Back: [b]" << setw(COLUMN_WIDTH) << "Quit: [q]" << endl;
         }
 
@@ -420,9 +461,13 @@ unsigned Menu::airportInfoMenu() {
                     cout << "Please enter the code of the airport you'd like to obtain information about: ";
                     cin >> airportCode;
                     if (!checkInput(3)) break;
-                    //TODO: Check if Airport exists
-
-                    //TODO: Get number of flights
+                    optional<Airport> airport = dataRepository.findAirport(airportCode);
+                    if (!airport.has_value()) {
+                        airportDoesntExist();
+                        break;
+                    }
+                    cout << graph.numFlights(airport.value()) << " flights leave from " << airport->getName()
+                         << " airport." << endl;
                     break;
                 }
                 case '2': {
@@ -430,9 +475,13 @@ unsigned Menu::airportInfoMenu() {
                     cout << "Please enter the code of the airport you'd like to obtain information about: ";
                     cin >> airportCode;
                     if (!checkInput(3)) break;
-                    //TODO: Check if Airport exists
-
-                    //TODO: Get number of airlines
+                    optional<Airport> airport = dataRepository.findAirport(airportCode);
+                    if (!airport.has_value()) {
+                        airportDoesntExist();
+                        break;
+                    }
+                    cout << graph.numAirlines(airport.value()) << " airlines carry flights that leave from "
+                         << airport->getName() << " airport." << endl;
                     break;
                 }
                 case '3': {
@@ -440,9 +489,13 @@ unsigned Menu::airportInfoMenu() {
                     cout << "Please enter the code of the airport you'd like to obtain information about: ";
                     cin >> airportCode;
                     if (!checkInput(3)) break;
-                    //TODO: Check if Airport exists
-
-                    //TODO: Get number of destinations
+                    optional<Airport> airport = dataRepository.findAirport(airportCode);
+                    if (!airport.has_value()) {
+                        airportDoesntExist();
+                        break;
+                    }
+                    cout << graph.numDestinations(airport.value()) << " cities are directly reachable from "
+                         << airport->getName() << " airport." << endl;
                     break;
                 }
                 case '4': {
@@ -450,9 +503,13 @@ unsigned Menu::airportInfoMenu() {
                     cout << "Please enter the code of the airport you'd like to obtain information about: ";
                     cin >> airportCode;
                     if (!checkInput(3)) break;
-                    //TODO: Check if Airport exists
-
-                    //TODO: Get number of countries
+                    optional<Airport> airport = dataRepository.findAirport(airportCode);
+                    if (!airport.has_value()) {
+                        airportDoesntExist();
+                        break;
+                    }
+                    cout << graph.numCountries(airport.value()) << " countries are directly reachable from "
+                         << airport->getName() << " airport." << endl;
                     break;
                 }
                 case '5': {
@@ -460,14 +517,20 @@ unsigned Menu::airportInfoMenu() {
                     cout << "Please enter the code of the airport you'd like to obtain information about: ";
                     cin >> airportCode;
                     if (!checkInput(3)) break;
-                    //TODO: Check if Airport exists
+                    optional<Airport> airport = dataRepository.findAirport(airportCode);
+                    if (!airport.has_value()) {
+                        airportDoesntExist();
+                        break;
+                    }
 
                     unsigned numFlights;
                     cout << "Please enter the max number of flights you'd like to check for: ";
                     cin >> numFlights;
                     if (!checkInput(5)) break;
 
-                    //TODO: Get number of airports in x flights
+                    cout << graph.numAirportsInXFlights(airport.value(), numFlights) << " other airports are reachable in "
+                         << numFlights << " or less flights from "
+                         << airport->getName() << " airport." << endl;
                     break;
                 }
                 case '6': {
@@ -475,14 +538,20 @@ unsigned Menu::airportInfoMenu() {
                     cout << "Please enter the code of the airport you'd like to obtain information about: ";
                     cin >> airportCode;
                     if (!checkInput(3)) break;
-                    //TODO: Check if Airport exists
+                    optional<Airport> airport = dataRepository.findAirport(airportCode);
+                    if (!airport.has_value()) {
+                        airportDoesntExist();
+                        break;
+                    }
 
                     unsigned numFlights;
                     cout << "Please enter the max number of flights you'd like to check for: ";
                     cin >> numFlights;
                     if (!checkInput(5)) break;
 
-                    //TODO: Get number of cities in x flights
+                    cout << graph.numCitiesInXFlights(airport.value(), numFlights) << " other cities are reachable in "
+                         << numFlights << " or less flights from "
+                         << airport->getName() << " airport." << endl;
                     break;
                 }
                 case '7': {
@@ -490,14 +559,20 @@ unsigned Menu::airportInfoMenu() {
                     cout << "Please enter the code of the airport you'd like to obtain information about: ";
                     cin >> airportCode;
                     if (!checkInput(3)) break;
-                    //TODO: Check if Airport exists
+                    optional<Airport> airport = dataRepository.findAirport(airportCode);
+                    if (!airport.has_value()) {
+                        airportDoesntExist();
+                        break;
+                    }
 
                     unsigned numFlights;
                     cout << "Please enter the max number of flights you'd like to check for: ";
                     cin >> numFlights;
                     if (!checkInput(5)) break;
 
-                    //TODO: Get number of countries in x flights
+                    cout << graph.numCountriesInXFlights(airport.value(), numFlights) << " other countries are reachable in "
+                         << numFlights << " or less flights from "
+                         << airport->getName() << " airport." << endl;
                     break;
                 }
                 case 'b': {
@@ -531,7 +606,8 @@ unsigned Menu::infoMenu() {
             cout << setw(COLUMN_WIDTH * COLUMNS_PER_LINE / 2) << setfill('-') << right << "INFOR";
             cout << setw(COLUMN_WIDTH * COLUMNS_PER_LINE / 2) << left << "MATION" << endl;
 
-            cout << setw(COLUMN_WIDTH) << setfill(' ') << "Information on a given airport: [1]" << setw(COLUMN_WIDTH)
+            cout << setw(COLUMN_WIDTH) << setfill(' ') << "Information on a given airport: [1]"
+                 << setw(COLUMN_WIDTH)
                  << "Information on the global network: [2]" << endl;
             cout << setw(COLUMN_WIDTH) << "Back: [b]" << setw(COLUMN_WIDTH) << "Quit: [q]" << endl;
         }
@@ -601,9 +677,11 @@ bool Menu::checkInput(unsigned int checkLength) {
     return true;
 }
 
+/**
+ * Delegates initialization of the menu, calling the appropriate functions for information extraction and output
+ */
 void Menu::initializeMenu() {
     extractFileInfo();
     mainMenu();
-    //TODO: Add destructor (?)
 }
 
