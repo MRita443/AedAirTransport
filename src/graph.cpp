@@ -55,6 +55,7 @@ const vector<Graph::Node> &Graph::getNodes() const {
 void Graph::setNodes(const vector<Node> &nodes) {
     Graph::nodes = nodes;
 }
+
 /**
  * Returns the index of the node representing the airport with the given code
  * @param code - Code of the Airport whose node index should be found
@@ -80,5 +81,68 @@ const airlineTable &Graph::getAirlines() const {
 void Graph::setAirlines(const airlineTable &airlines) {
     Graph::airlines = airlines;
 }
+
+/**
+ * Computes the number of flights that leave from a given airport
+ * Time Complexity: O(outdegree(v)), where v is the node associated with the given Airport
+ * @param airport - Airport whose number of flights should be calculated
+ * @return Number of flights leaving from given Airport
+ */
+unsigned Graph::numFlights(const Airport &airport) const {
+    unsigned total = 0;
+    int v = airportToNode.at(airport);
+    for (const Edge& e: nodes[v].adj) {
+        total += e.airlines.size();
+    }
+    return total;
+}
+
+/**
+ * Computes the number of Airlines that carry flights leaving from a given Airport
+ * Time Complexity: O(outdegree(v) * N² + N) (worst case) | O(outdegree(v) * N) (average case), where N is the number of different airlines carrying flights from the given Airport and v is the node associated with the given Airport
+ * @param airport - Airport whose number of Airlines should be calculated
+ * @return Number of Airlines carrying flights leaving from given Airport
+ */
+unsigned Graph::numAirlines(const Airport &airport) const {
+    airlineTable currentAirlines;
+    int v = airportToNode.at(airport);
+    for (Edge e: nodes[v].adj) {
+        currentAirlines.merge(e.airlines);
+    }
+    return currentAirlines.size();
+}
+
+/**
+ * Computes the number of cities reachable in a flight from a given Airport
+ * Time Complexity: O(outdegree(v) * N) (worst case) | O(outdegree(v)) (average case), where N is the number of different cities directly reachable from the given Airport and v is the node associated with the given Airport
+ * @param airport - Airport whose number of destinations should be calculated
+ * @return Numbers of different cities reachable in direct flights from the given Airport
+ */
+unsigned Graph::numDestinations(const Airport &airport) const {
+    cityTable currentCities;
+    int v = airportToNode.at(airport);
+    for (const Edge& e: nodes[v].adj) {
+        int w = e.dest;
+        currentCities.insert({nodes[w].airport.getCity(), nodes[w].airport.getCountry()});
+    }
+    return currentCities.size();
+}
+
+/**
+ * Computes the number of countries reachable in a flight from a given Airport
+ * Time Complexity: O(outdegree(v) * N) (worst case) | O(outdegree(v)) (average case), where N is the number of different countries directly reachable from the given Airport and v is the node associated to the given Airport
+ * @param airport - Airport whose number of destination countries should be calculated
+ * @return Numbers of different countries reachable in direct flights from the given Airport
+ */
+unsigned Graph::numCountries(const Airport &airport) const {
+    unordered_set<string> currentCountries;
+    int v = airportToNode.at(airport);
+    for (const Edge& e: nodes[v].adj) {
+        int w = e.dest;
+        currentCountries.insert(nodes[w].airport.getCountry());
+    }
+    return currentCountries.size();
+}
+
 
 

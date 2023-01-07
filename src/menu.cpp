@@ -162,6 +162,7 @@ void Menu::extractFlightsFile() {
         }
     }
 }
+
 /**
  * Outputs to the screen a message indicating that the given Airport doesn't exist
  */
@@ -435,9 +436,9 @@ unsigned Menu::airportInfoMenu() {
                  << "Number of different destinations: [3]"
                  << endl;
             cout << setw(COLUMN_WIDTH) << "Number of reachable countries: [4]" << setw(COLUMN_WIDTH)
-                 << "Number of airports reachable within x flights: [5]" << setw(COLUMN_WIDTH)
-                 << "Number of cities reachable within x flights: [6]" << endl;
-            cout << setw(COLUMN_WIDTH) << "Number of countries reachable within x flights: [7]"
+                 << "Number of airports within x flights: [5]" << setw(COLUMN_WIDTH)
+                 << "Number of cities within x flights: [6]" << endl;
+            cout << setw(COLUMN_WIDTH) << "Number of countries within x flights: [7]"
                  << setw(COLUMN_WIDTH)
                  << "Back: [b]" << setw(COLUMN_WIDTH) << "Quit: [q]" << endl;
         }
@@ -461,8 +462,8 @@ unsigned Menu::airportInfoMenu() {
                         airportDoesntExist();
                         break;
                     }
-
-                    //TODO: Get number of flights
+                    cout << graph.numFlights(airport.value()) << " flights leave from " << airport->getName()
+                         << " airport." << endl;
                     break;
                 }
                 case '2': {
@@ -475,8 +476,8 @@ unsigned Menu::airportInfoMenu() {
                         airportDoesntExist();
                         break;
                     }
-
-                    //TODO: Get number of airlines
+                    cout << graph.numAirlines(airport.value()) << " airlines carry flights that leave from "
+                         << airport->getName() << " airport." << endl;
                     break;
                 }
                 case '3': {
@@ -489,8 +490,8 @@ unsigned Menu::airportInfoMenu() {
                         airportDoesntExist();
                         break;
                     }
-
-                    //TODO: Get number of destinations
+                    cout << graph.numDestinations(airport.value()) << " cities are directly reachable from "
+                         << airport->getName() << " airport." << endl;
                     break;
                 }
                 case '4': {
@@ -503,8 +504,8 @@ unsigned Menu::airportInfoMenu() {
                         airportDoesntExist();
                         break;
                     }
-
-                    //TODO: Get number of countries
+                    cout << graph.numCountries(airport.value()) << " countries are directly reachable from "
+                         << airport->getName() << " airport." << endl;
                     break;
                 }
                 case '5': {
