@@ -21,7 +21,8 @@ class Graph {
     struct Node {
         Airport airport; //The Airport this node represents
         list<Edge> adj; // The list of outgoing edges (to adjacent nodes)
-        bool visited;   // Has the node been visited on a search?
+        bool visited;   // As the node been visited on a search?
+        pair<int,list<Airline *>> predecessing_trip; // The node that connected to this node
         int dist;
     };
 
@@ -46,7 +47,7 @@ public:
 
     // Breadth-First Search: example implementation
     //TODO: Multi-source BFS
-    void bfs(int v);
+    list<pair<int,list<Airline *>>> shortest_path_bfs(vector<int> source, int destination, list<Airline *> avoid = {});
 
     int getN() const;
 
