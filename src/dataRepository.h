@@ -28,6 +28,8 @@ struct pairCityEquals {
 };
 
 typedef std::unordered_map<std::pair<std::string, std::string>, std::list<Airport>, pairCityHash, pairCityEquals> cityToAirportsMap;
+typedef std::unordered_set<std::pair<std::string, std::string>, pairCityHash, pairCityEquals> cityTable;
+
 
 class DataRepository {
 private:

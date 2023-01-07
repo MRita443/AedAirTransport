@@ -8,6 +8,7 @@
 #include <unordered_map>
 #include "airline.h"
 #include "airport.h"
+#include "dataRepository.h"
 
 using namespace std;
 
@@ -62,11 +63,19 @@ public:
 
     void setAirlines(const airlineTable &airlines);
 
+    unsigned numFlights(const Airport& airport) const;
+
 
     // ----- Functions to implement in this class -----
     //int distance(int a, int b);
     //int diameter();
     int findAirportNode(const string &code);
+
+    unsigned int numAirlines(const Airport &airport) const;
+
+    unsigned int numDestinations(const Airport &airport) const;
+
+    unsigned int numCountries(const Airport &airport) const;
 };
 
 #endif
