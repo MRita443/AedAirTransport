@@ -394,8 +394,7 @@ unsigned Menu::flightsMenu() {
                             departure = dataRepository.findAirportsInLocation(latitude, longitude, maxDistance);
                             validFirstInput = true;
                         } else {
-                            arrival = {//TODO: Get Airport by location
-                            };
+                            arrival = dataRepository.findAirportsInLocation(latitude, longitude, maxDistance);
                             validFullInput = true;
                         }
                         break;
@@ -529,7 +528,9 @@ unsigned Menu::airportInfoMenu() {
                     cin >> numFlights;
                     if (!checkInput(5)) break;
 
-                    //TODO: Get number of airports in x flights
+                    cout << graph.numAirportsInXFlights(airport.value(), numFlights) << " other airports are reachable in "
+                         << numFlights << " or less flights from "
+                         << airport->getName() << " airport." << endl;
                     break;
                 }
                 case '6': {
@@ -548,7 +549,9 @@ unsigned Menu::airportInfoMenu() {
                     cin >> numFlights;
                     if (!checkInput(5)) break;
 
-                    //TODO: Get number of cities in x flights
+                    cout << graph.numCitiesInXFlights(airport.value(), numFlights) << " other cities are reachable in "
+                         << numFlights << " or less flights from "
+                         << airport->getName() << " airport." << endl;
                     break;
                 }
                 case '7': {
@@ -567,7 +570,9 @@ unsigned Menu::airportInfoMenu() {
                     cin >> numFlights;
                     if (!checkInput(5)) break;
 
-                    //TODO: Get number of countries in x flights
+                    cout << graph.numCountriesInXFlights(airport.value(), numFlights) << " other countries are reachable in "
+                         << numFlights << " or less flights from "
+                         << airport->getName() << " airport." << endl;
                     break;
                 }
                 case 'b': {
@@ -678,6 +683,5 @@ bool Menu::checkInput(unsigned int checkLength) {
 void Menu::initializeMenu() {
     extractFileInfo();
     mainMenu();
-    //TODO: Add destructor (?)
 }
 
