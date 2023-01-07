@@ -370,13 +370,19 @@ unsigned Menu::flightsMenu() {
                         cout << "Please enter the latitude of your preferred " << currentSelection << " location: ";
                         cin >> latitude;
                         if (!checkInput()) break;
+                        if (latitude < -90 || latitude > 90) {
+                            cout << "Please enter an appropriate latitude." << endl;
+                            break;
+                        }
 
                         cout << "Please enter the longitude of your preferred " << currentSelection
                              << " location: ";
                         cin >> longitude;
                         if (!checkInput()) break;
-
-                        //TODO: Check if location is valid
+                        if (longitude < -180 || longitude > 180) {
+                            cout << "Please enter an appropriate latitude." << endl;
+                            break;
+                        }
 
                         cout << "Please enter the max distance of the airport to your preferred "
                              << currentSelection
@@ -385,8 +391,7 @@ unsigned Menu::flightsMenu() {
                         if (!checkInput()) break;
 
                         if (currentSelection == "departure") {
-                            departure = {//TODO: Get Airport by location
-                            };
+                            departure = dataRepository.findAirportsInLocation(latitude, longitude, maxDistance);
                             validFirstInput = true;
                         } else {
                             arrival = {//TODO: Get Airport by location

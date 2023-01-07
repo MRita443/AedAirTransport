@@ -18,7 +18,7 @@ public:
 
     void setLongitude(float longitude);
 
-    double getDistance(Position position);
+    double getDistance(Position position) const;
 };
 
 #endif

@@ -91,7 +91,7 @@ void Graph::setAirlines(const airlineTable &airlines) {
 unsigned Graph::numFlights(const Airport &airport) const {
     unsigned total = 0;
     int v = airportToNode.at(airport);
-    for (const Edge& e: nodes[v].adj) {
+    for (const Edge &e: nodes[v].adj) {
         total += e.airlines.size();
     }
     return total;
@@ -121,7 +121,7 @@ unsigned Graph::numAirlines(const Airport &airport) const {
 unsigned Graph::numDestinations(const Airport &airport) const {
     cityTable currentCities;
     int v = airportToNode.at(airport);
-    for (const Edge& e: nodes[v].adj) {
+    for (const Edge &e: nodes[v].adj) {
         int w = e.dest;
         currentCities.insert({nodes[w].airport.getCity(), nodes[w].airport.getCountry()});
     }
@@ -137,11 +137,29 @@ unsigned Graph::numDestinations(const Airport &airport) const {
 unsigned Graph::numCountries(const Airport &airport) const {
     unordered_set<string> currentCountries;
     int v = airportToNode.at(airport);
-    for (const Edge& e: nodes[v].adj) {
+    for (const Edge &e: nodes[v].adj) {
         int w = e.dest;
         currentCountries.insert(nodes[w].airport.getCountry());
     }
     return currentCountries.size();
+}
+
+/**
+ * Intersects two unordered_set<Airline>
+ * Time Complexity: 0(n * m) (worst case) | O(n) (average case), where n is the size of the first table and m the size of the second table
+ * @param table1 - First table
+ * @param table2 - Second table
+ * @return Intersection between the two given airline tables
+ */
+airlineTable Graph::intersectTables(const airlineTable &table1, const airlineTable &table2) {
+    airlineTable intersection;
+    for (auto i = begin(table1); i != end(table1); i++) {
+        auto table2It = table2.find(*i);
+        if (table2It != end(table2)) {
+            intersection.insert(*table2It);
+        }
+    }
+    return intersection;
 }
 
 
