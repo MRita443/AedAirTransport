@@ -67,7 +67,7 @@ Airport DataRepository::addAirportEntry(string code, string name, string city, s
  * @param country - Country of the new Airport
  * @param airport - Airport to add
  */
-void DataRepository::addAirportToCityEntry(const string& city, const string& country, const Airport& airport) {
+void DataRepository::addAirportToCityEntry(const string &city, const string &country, const Airport &airport) {
     list<Airport> currList = cityToAirports[{city, country}];
     currList.push_back(airport);
     cityToAirports.insert_or_assign({city, country}, currList);
@@ -92,6 +92,7 @@ std::optional<Airport> DataRepository::findAirport(const string &code) {
     if (it != airports.end()) result = *it;
     return result;
 }
+
 /**
  * Finds the Airline object with the given code
  * @param code - Code of the Airline to be returned
@@ -120,8 +121,26 @@ list<Airport> DataRepository::findAirportsInCity(const std::string &city, const 
  * @param country - Country to be validated
  * @return true if the combination is valid, false if it is not
  */
-bool DataRepository::checkValidCityCountry(const std::string &city, const std::string &country){
+bool DataRepository::checkValidCityCountry(const std::string &city, const std::string &country) {
     return cityToAirports.find({city, country}) != cityToAirports.end();
+}
+
+/**
+ * Finds all the airports in a certain distance to the given location
+ * @param latitude - Latitude of the location
+ * @param longitude - Longitude of the location
+ * @param maxDistance - Max valid distance of the airport to the location
+ * @return List of Airports with all the airports within a distance of maxDistance
+ */
+list<Airport> DataRepository::findAirportsInLocation(float latitude, float longitude, float maxDistance) {
+    Position startPos = Position(latitude, longitude);
+    list<Airport> valid;
+    for (auto aport: airports) {
+        if (aport.getLocation().getDistance(startPos) <= maxDistance) {
+            valid.push_back(aport);
+        }
+    }
+    return valid;
 }
 
 

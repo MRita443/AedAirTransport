@@ -76,6 +76,8 @@ public:
     unsigned int numDestinations(const Airport &airport) const;
 
     unsigned int numCountries(const Airport &airport) const;
+
+    airlineTable intersectTables(const airlineTable &table1, const airlineTable &table2);
 };
 
 #endif
