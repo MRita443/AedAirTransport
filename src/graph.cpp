@@ -116,7 +116,7 @@ unsigned Graph::numAirlines(const Airport &airport) const {
  * Computes the number of cities reachable in a flight from a given Airport
  * Time Complexity: O(outdegree(v) * N) (worst case) | O(outdegree(v)) (average case), where N is the number of different cities directly reachable from the given Airport and v is the node associated with the given Airport
  * @param airport - Airport whose number of destinations should be calculated
- * @return Numbers of different cities reachable in direct flights from the given Airport
+ * @return Number of different cities reachable in direct flights from the given Airport
  */
 unsigned Graph::numDestinations(const Airport &airport) const {
     cityTable currentCities;
@@ -132,7 +132,7 @@ unsigned Graph::numDestinations(const Airport &airport) const {
  * Computes the number of countries reachable in a flight from a given Airport
  * Time Complexity: O(outdegree(v) * N) (worst case) | O(outdegree(v)) (average case), where N is the number of different countries directly reachable from the given Airport and v is the node associated to the given Airport
  * @param airport - Airport whose number of destination countries should be calculated
- * @return Numbers of different countries reachable in direct flights from the given Airport
+ * @return Number of different countries reachable in direct flights from the given Airport
  */
 unsigned Graph::numCountries(const Airport &airport) const {
     unordered_set<string> currentCountries;
@@ -160,6 +160,88 @@ airlineTable Graph::intersectTables(const airlineTable &table1, const airlineTab
         }
     }
     return intersection;
+}
+
+/**
+ * BFS function that visits the graph and sets the distance variable for all nodes
+ * Time Complexity: O(|V| +|E|)
+ * @param v - Root node of the BFS
+ */
+void Graph::bfsDistance(int v) {
+    for (int i = 1; i <= n; i++) {
+        nodes[i].visited = false;
+        nodes[i].dist = -1;
+    }
+    queue<int> q; // queue of unvisited nodes
+    q.push(v);
+    nodes[v].visited = true;
+    nodes[v].dist = 0;
+    while (!q.empty()) { // while there are still unvisited nodes
+        int u = q.front();
+        q.pop();
+        // show node order
+        //cout << u << " ";
+        for (auto e: nodes[u].adj) {
+            int w = e.dest;
+            if (!nodes[w].visited) {
+                q.push(w);
+                nodes[w].visited = true;
+                nodes[w].dist = nodes[u].dist + 1;
+            }
+        }
+    }
+}
+
+/**
+ * Computes the number of airports reachable from the given Airport in less than x flights
+ * Time Complexity: O(|V| + |E|)
+ * @param airport - Source Airport
+ * @param numFlights - Max number of flights
+ * @return Number of airports reachable from the given Airport in less or numFlights flights
+ */
+unsigned Graph::numAirportsInXFlights(const Airport &airport, unsigned numFlights) {
+    unsigned total = 0;
+    int v = airportToNode.at(airport);
+    bfsDistance(v);
+    for (int i = 1; i <= n; i++) {
+        if (nodes[i].dist <= numFlights) total++;
+    }
+    return total - 1; //Excluding the airport itself
+}
+
+/**
+ * Computes the number of cities reachable from the given Airport in less than x flights
+ * Time Complexity: O(|V|²) (worst case) | O(|V| + |E|) (average case)
+ * @param airport - Source Airport
+ * @param numFlights - Max number of flights
+ * @return Number of cities reachable from the given Airport in less or numFlights flights
+ */
+unsigned Graph::numCitiesInXFlights(const Airport &airport, unsigned numFlights) {
+    cityTable currentCities;
+    int v = airportToNode.at(airport);
+    bfsDistance(v);
+    for (int i = 1; i <= n; i++) {
+        if (nodes[i].dist <= numFlights)
+            currentCities.insert({nodes[i].airport.getCity(), nodes[i].airport.getCountry()});
+    }
+    return currentCities.size() - 1; //Excluding the airport itself
+}
+
+/**
+ * Computes the number of countries reachable from the given Airport in less than x flights
+ * Time Complexity: O(|V|²) (worst case) | O(|V| + |E|) (average case)
+ * @param airport - Source Airport
+ * @param numFlights - Max number of flights
+ * @return Number of countries reachable from the given Airport in less or numFlights flights
+ */
+unsigned Graph::numCountriesInXFlights(const Airport &airport, unsigned numFlights) {
+    unordered_set<string> currentCountries;
+    int v = airportToNode.at(airport);
+    bfsDistance(v);
+    for (int i = 1; i <= n; i++) {
+        if (nodes[i].dist <= numFlights) currentCountries.insert(nodes[i].airport.getCountry());
+    }
+    return currentCountries.size() - 1; //Excluding the airport itself
 }
 
 

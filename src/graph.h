@@ -21,7 +21,8 @@ class Graph {
     struct Node {
         Airport airport; //The Airport this node represents
         list<Edge> adj; // The list of outgoing edges (to adjacent nodes)
-        bool visited;   // As the node been visited on a search?
+        bool visited;   // Has the node been visited on a search?
+        int dist;
     };
 
     int n;              // Graph size (vertices are numbered from 1 to n)
@@ -63,7 +64,7 @@ public:
 
     void setAirlines(const airlineTable &airlines);
 
-    unsigned numFlights(const Airport& airport) const;
+    unsigned numFlights(const Airport &airport) const;
 
 
     // ----- Functions to implement in this class -----
@@ -78,6 +79,14 @@ public:
     unsigned int numCountries(const Airport &airport) const;
 
     airlineTable intersectTables(const airlineTable &table1, const airlineTable &table2);
+
+    void bfsDistance(int v);
+
+    unsigned int numAirportsInXFlights(const Airport &airport, unsigned int numFlights);
+
+    unsigned int numCitiesInXFlights(const Airport &airport, unsigned numFlights);
+
+    unsigned int numCountriesInXFlights(const Airport &airport, unsigned int numFlights);
 };
 
 #endif
