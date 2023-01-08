@@ -143,5 +143,15 @@ list<Airport> DataRepository::findAirportsInLocation(float latitude, float longi
     return valid;
 }
 
+/**
+ * Computes total number of different countries
+ * Time Complexity: O(n²) (worst case) | 0(n) (average case), where n is the size of cityToAirport
+ * @return Number of different countries
+ */
+unsigned DataRepository::getTotalNumCountries(){
+    unordered_set<string> countries;
+    for(auto p: cityToAirports) countries.insert(p.first.second);
+    return countries.size();
+}
 
 
