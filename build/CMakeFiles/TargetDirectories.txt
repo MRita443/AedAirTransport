@@ -1,0 +1,3 @@
+/home/tomas_vicente/aed/AedAirTransport/build/CMakeFiles/rebuild_cache.dir
+/home/tomas_vicente/aed/AedAirTransport/build/CMakeFiles/edit_cache.dir
+/home/tomas_vicente/aed/AedAirTransport/build/CMakeFiles/AirTransport.dir

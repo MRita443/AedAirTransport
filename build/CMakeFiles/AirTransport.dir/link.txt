@@ -1,0 +1,1 @@
+/usr/bin/g++ -g CMakeFiles/AirTransport.dir/src/main.cpp.o CMakeFiles/AirTransport.dir/src/airline.cpp.o CMakeFiles/AirTransport.dir/src/airport.cpp.o CMakeFiles/AirTransport.dir/src/graph.cpp.o CMakeFiles/AirTransport.dir/src/menu.cpp.o CMakeFiles/AirTransport.dir/src/position.cpp.o CMakeFiles/AirTransport.dir/src/dataRepository.cpp.o -o AirTransport 

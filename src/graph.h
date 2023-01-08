@@ -25,12 +25,16 @@ class Graph {
         bool visited;   // As the node been visited on a search?
         list<pair<airlineTable, string>> predecessing_trip; // The node that connected to this node
         int dist;
+        int num;
+        int low;
     };
 
     int n;              // Graph size (vertices are numbered from 1 to n)
     vector<Node> nodes; // The list of nodes being represented
     airportMap<int> airportToNode;
     airlineTable airlines;
+    vector<int> stack; // stack as vector (so we can use the find() algorithm)
+    int idx;
 
 public:
     // Constructor: nr nodes and direction (default: undirected)
@@ -47,7 +51,10 @@ public:
     //void dfs(int v);
 
     // Breadth-First Search: example implementation
+
+    int dfs_scc(int v);
     int bfsMaxDistance(int v);
+
     list<pair<int, airlineTable>> shortest_path_bfs(vector<int> source, int destination, list<Airline *> avoid = {});
 
 
@@ -74,9 +81,11 @@ public:
 
     // ----- Functions to implement in this class -----
     //int distance(int a, int b);
+
+    int countSCCs();
     
     int getDiameter();
-    
+
     int findAirportNode(const string &code);
 
     unsigned int numAirlines(const Airport &airport) const;
