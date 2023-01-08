@@ -1,0 +1,37 @@
+[
+{
+  "directory": "/home/tomas_vicente/aed/AedAirTransport/build",
+  "command": "/usr/bin/g++   -g -std=gnu++17 -o CMakeFiles/AirTransport.dir/src/main.cpp.o -c /home/tomas_vicente/aed/AedAirTransport/src/main.cpp",
+  "file": "/home/tomas_vicente/aed/AedAirTransport/src/main.cpp"
+},
+{
+  "directory": "/home/tomas_vicente/aed/AedAirTransport/build",
+  "command": "/usr/bin/g++   -g -std=gnu++17 -o CMakeFiles/AirTransport.dir/src/airline.cpp.o -c /home/tomas_vicente/aed/AedAirTransport/src/airline.cpp",
+  "file": "/home/tomas_vicente/aed/AedAirTransport/src/airline.cpp"
+},
+{
+  "directory": "/home/tomas_vicente/aed/AedAirTransport/build",
+  "command": "/usr/bin/g++   -g -std=gnu++17 -o CMakeFiles/AirTransport.dir/src/airport.cpp.o -c /home/tomas_vicente/aed/AedAirTransport/src/airport.cpp",
+  "file": "/home/tomas_vicente/aed/AedAirTransport/src/airport.cpp"
+},
+{
+  "directory": "/home/tomas_vicente/aed/AedAirTransport/build",
+  "command": "/usr/bin/g++   -g -std=gnu++17 -o CMakeFiles/AirTransport.dir/src/graph.cpp.o -c /home/tomas_vicente/aed/AedAirTransport/src/graph.cpp",
+  "file": "/home/tomas_vicente/aed/AedAirTransport/src/graph.cpp"
+},
+{
+  "directory": "/home/tomas_vicente/aed/AedAirTransport/build",
+  "command": "/usr/bin/g++   -g -std=gnu++17 -o CMakeFiles/AirTransport.dir/src/menu.cpp.o -c /home/tomas_vicente/aed/AedAirTransport/src/menu.cpp",
+  "file": "/home/tomas_vicente/aed/AedAirTransport/src/menu.cpp"
+},
+{
+  "directory": "/home/tomas_vicente/aed/AedAirTransport/build",
+  "command": "/usr/bin/g++   -g -std=gnu++17 -o CMakeFiles/AirTransport.dir/src/position.cpp.o -c /home/tomas_vicente/aed/AedAirTransport/src/position.cpp",
+  "file": "/home/tomas_vicente/aed/AedAirTransport/src/position.cpp"
+},
+{
+  "directory": "/home/tomas_vicente/aed/AedAirTransport/build",
+  "command": "/usr/bin/g++   -g -std=gnu++17 -o CMakeFiles/AirTransport.dir/src/dataRepository.cpp.o -c /home/tomas_vicente/aed/AedAirTransport/src/dataRepository.cpp",
+  "file": "/home/tomas_vicente/aed/AedAirTransport/src/dataRepository.cpp"
+}
+]

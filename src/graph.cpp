@@ -1,4 +1,5 @@
 #include "graph.h"
+#include <algorithm>
 
 using namespace std;
 
@@ -321,4 +322,60 @@ Graph::getShortestPath(const list<Airport> &source, const list<Airport> &target,
     return shortestPaths;
 }
 
+/**
+ * Depth-First Search Algorithm variation that returns the ammounts of strongly connected components starting on a certain airport
+ * Time Complexity: O(|V+E|)
+ * @param v - Index of the airport where the search beggings
+ */
+int Graph::dfs_scc(int v){
+    nodes[v].num = this -> idx;
+    nodes[v].low = this -> idx;
+    this->idx++;
+    stack.push_back(v);
+    int acc = 0;
 
+    for (Edge e : nodes[v].adj){
+        int w = e.dest;
+        if (nodes[w].num == -1){
+            dfs_scc(w);
+            if (nodes[w].low < nodes[v].low) nodes[v].low = nodes[w].low;
+        }
+        else if (find(stack.begin(), stack.end(),w)!=stack.end()){
+            if (nodes[w].num < nodes[v].low) nodes[v].low = nodes[w].num;
+        }
+    }
+
+    if (nodes[v].num == nodes[v].low){
+        acc++;
+        int w;
+        do{
+            w = stack.back();
+            stack.pop_back();
+        } while (w != v);
+    }
+    return acc;
+}
+
+/**
+ * Computes how many Strongly Connected Components are in the graph composed by the airports
+ * Time Complexity: O(|V|*|V+E|)
+ */
+int Graph::countSCCs(){
+    this-> idx = 1;
+    vector<int> temp;
+    this->stack = temp;
+    int acc = 0;
+
+    for (int i = 1; i <= n; i++){
+        nodes[i].num = -1;
+        nodes[i].low = -1;
+        nodes[i].visited = false;
+    }
+
+    for (int i = 1; i <= n; i++){
+        if (nodes[i].num == -1){
+            acc += dfs_scc(i);
+        }
+    }
+    return acc;
+}
