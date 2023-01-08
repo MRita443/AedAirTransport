@@ -6,6 +6,7 @@
 #include <queue>
 #include <iostream>
 #include <unordered_map>
+#include <stack>
 #include "airline.h"
 #include "airport.h"
 #include "dataRepository.h"
@@ -22,7 +23,7 @@ class Graph {
         Airport airport; //The Airport this node represents
         list<Edge> adj; // The list of outgoing edges (to adjacent nodes)
         bool visited;   // As the node been visited on a search?
-        pair<int,list<Airline *>> predecessing_trip; // The node that connected to this node
+        list<pair<airlineTable, string>> predecessing_trip; // The node that connected to this node
         int dist;
     };
 
@@ -46,8 +47,9 @@ public:
     //void dfs(int v);
 
     // Breadth-First Search: example implementation
-    list<pair<int,list<Airline *>>> shortest_path_bfs(vector<int> source, int destination, list<Airline *> avoid = {});
     int bfsMaxDistance(int v);
+    list<pair<int, airlineTable>> shortest_path_bfs(vector<int> source, int destination, list<Airline *> avoid = {});
+
 
     int getN() const;
     int getTotalConnectingFlights() const; //total voos ignorando companhias
@@ -92,6 +94,11 @@ public:
     unsigned int numCitiesInXFlights(const Airport &airport, unsigned numFlights);
 
     unsigned int numCountriesInXFlights(const Airport &airport, unsigned int numFlights);
+
+    list<pair<airlineTable, string>> shortest_path_bfs(list<int> source, int destination, airlineTable validAirlines);
+
+    list<list<pair<airlineTable, string>>>
+    getShortestPath(const list<Airport> &source, const list<Airport> &target, airlineTable validAirlines);
 };
 
 #endif
