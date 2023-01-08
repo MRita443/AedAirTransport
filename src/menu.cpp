@@ -701,7 +701,6 @@ bool Menu::checkInput(unsigned int checkLength) {
  */
 void Menu::initializeMenu() {
     extractFileInfo();
-    auto a = graph.shortest_path_bfs({691}, graph.findAirportNode("PEK"), dataRepository.getAirlines());
     mainMenu();
 }
 

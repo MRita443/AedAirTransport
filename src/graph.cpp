@@ -144,6 +144,7 @@ Graph::shortest_path_bfs(list<int> source, int destination, airlineTable validAi
                 nodes[w].predecessing_trip = nodes[u].predecessing_trip;
                 nodes[w].predecessing_trip.push_back({available_airlines, nodes[w].airport.getCode()});
             }
+            if (w == destination) break;
         }
     }
     return nodes[destination].predecessing_trip;
