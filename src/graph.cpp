@@ -102,31 +102,16 @@ unsigned Graph::numFlights(const Airport &airport) const {
     return total;
 }
 
-/**
- * Builds a list with the available airlines for a flight, removing the unwanted airlines.
- * Time Complexity: O(n^2)
- * 
- * @param available - List with available airlines for the flight
- * @param avoid - List with unwanted airlines
- */
-list<Airline *> avoid_airlines(list<Airline *> available, list<Airline *> avoid) {
-    auto it = available.begin();
-    while (it != available.end()) {
-        auto curr = it;
-        it++;
-        if (find(avoid.begin(), avoid.end(), *curr) != avoid.end()) available.erase(curr);
-    }
-    return available;
-}
 
 /**
- * Finds one of the routes with several flights that has the minimum ammount of flights.
- * Time Complexity: O(V+E) //TODO verifiquem-me isto pls (como tem o avoid_airlines() a meio tbm passa a O(n^2), não?)
+ * Finds one of the routes connecting one of the source nodes to the destination node that has the minimum amount of flights, avoiding invalid Edges.
+ * Time Complexity: O(|V|+|E| * n * m) (worst case) | O(|V|+|E| * n) (average case), where n is the size of validAirlines and m is the largest number of airlines on an Edge
  * 
- * @param source - Airport where the travel begins
- * @param destination - Airport where the travel ends
- * @param avoid - List of Airlines that are to avoid
- */
+ * @param source - Index of the source node
+ * @param destination - Index of the destination node
+ * @param validAirlines - unordered_set of Airlines that are valid
+ * @return A list of pair<airlineTable, string>, each representing the airlines that connected the previous pair to this one, and the code of the connected Airport
+*/
 list<pair<airlineTable, string>>
 Graph::shortest_path_bfs(list<int> source, int destination, airlineTable validAirlines) {
     if (std::find(source.begin(), source.end(), destination) != source.end()) return {};
@@ -161,11 +146,10 @@ Graph::shortest_path_bfs(list<int> source, int destination, airlineTable validAi
             }
         }
     }
-
     return nodes[destination].predecessing_trip;
 }
 
-/*
+/**
  * Computes the number of Airlines that carry flights leaving from a given Airport
  * Time Complexity: O(outdegree(v) * N² + N) (worst case) | O(outdegree(v) * N) (average case), where N is the number of different airlines carrying flights from the given Airport and v is the node associated with the given Airport
  * @param airport - Airport whose number of Airlines should be calculated
@@ -214,7 +198,7 @@ unsigned Graph::numCountries(const Airport &airport) const {
 
 /**
  * Intersects two unordered_set<Airline>
- * Time Complexity: 0(n * m) (worst case) | O(n) (average case), where n is the size of the first table and m the size of the second table
+ * Time Complexity: O(n * m) (worst case) | O(n) (average case), where n is the size of the first table and m the size of the second table
  * @param table1 - First table
  * @param table2 - Second table
  * @return Intersection between the two given airline tables
@@ -312,6 +296,14 @@ unsigned Graph::numCountriesInXFlights(const Airport &airport, unsigned numFligh
     return currentCountries.size() - 1; //Excluding the airport itself
 }
 
+/**
+ * Computes a list of the shortest paths (not exhaustive) connecting the source airports to the target airports, using only airlines in validAirlines
+ * Time Complexity: O(|V|+|E| * n * m * k) (worst case) | O(|V|+|E| * n * k) (average case), where n is the size of validAirlines, m is the largest number of airlines on an Edge, and k the size of target
+ * @param source - List of source Airports
+ * @param target - List of target Airports
+ * @param validAirlines - unordered_set of Airlines that are valid
+ * @return A list of the shortest paths, where paths are a list of pair<airlineTable, string>, each representing the airlines that connected the previous pair to this one, and the code of the connected Airport
+ */
 list<list<pair<airlineTable, string>>>
 Graph::getShortestPath(const list<Airport> &source, const list<Airport> &target, airlineTable validAirlines) {
     list<int> listSource, listDest;
@@ -320,7 +312,6 @@ Graph::getShortestPath(const list<Airport> &source, const list<Airport> &target,
     for (const Airport &airport: source) { listSource.push_back(airportToNode[airport]); }
 
     for (const Airport &airport: target) {
-        int a = airportToNode[airport];
         auto currentPath = shortest_path_bfs(listSource, airportToNode[airport], validAirlines);
         if (shortestPaths.size() == 0 || currentPath.size() == shortestPaths.front().size())
             shortestPaths.push_back(currentPath);
