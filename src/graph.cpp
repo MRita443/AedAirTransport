@@ -1,6 +1,5 @@
 #include "graph.h"
-#include <map>
-#include <algorithm>
+
 using namespace std;
 
 // Constructor: nr nodes
@@ -21,14 +20,19 @@ void Graph::addEdge(int src, int dest, const airlineTable &connectingAirlines) {
 
 /**
  * Adds an edge to the graph
- * Time Complexity: O(1)
+ * Time Complexity: TODO: TIME COMPLEXITY
  * @param src - Number of the source node
  * @param dest - Number of the destination node
  * @param airline - Pointer to an Airlines whose flight connects the two nodes (Airports)
  */
 void Graph::addEdge(int src, int dest, const Airline &airline) {
     if (src < 1 || src > n || dest < 1 || dest > n) return;
-    nodes[src].adj.push_back({dest, airlineTable({airline})});
+
+    auto existingEdgeIt = std::find_if(nodes[src].adj.begin(), nodes[src].adj.end(),
+                                       [dest](Edge e) { return e.dest == dest; });
+    if (existingEdgeIt != nodes[src].adj.end()) {
+        existingEdgeIt->airlines.insert(airline);
+    } else nodes[src].adj.push_back({dest, airlineTable({airline})});
 }
 
 /**
@@ -98,74 +102,55 @@ unsigned Graph::numFlights(const Airport &airport) const {
     return total;
 }
 
-/**
- * Builds a list with the available airlines for a flight, removing the unwanted airlines.
- * Time Complexity: O(n^2)
- * 
- * @param available - List with available airlines for the flight
- * @param avoid - List with unwanted airlines
- */
-list<Airline *> avoid_airlines(list<Airline *> available, list<Airline *> avoid){
-    auto it = available.begin();
-    while (it != available.end()){
-        auto curr = it;
-        it++;
-        if (find(avoid.begin(),avoid.end(),*curr) != avoid.end()) available.erase(curr);
-    }
-    return available;
-}
 
 /**
- * Finds one of the routes with several flights that has the minimum ammount of flights.
- * Time Complexity: O(V+E) //TODO verifiquem-me isto pls (como tem o avoid_airlines() a meio tbm passa a O(n^2), não?)
+ * Finds one of the routes connecting one of the source nodes to the destination node that has the minimum amount of flights, avoiding invalid Edges.
+ * Time Complexity: O(|V|+|E| * n * m) (worst case) | O(|V|+|E| * n) (average case), where n is the size of validAirlines and m is the largest number of airlines on an Edge
  * 
- * @param source - Airport where the travel begins
- * @param destination - Airport where the travel ends
- * @param avoid - List of Airlines that are to avoid
- */
-list<pair<int,list<Airline *>>> Graph::shortest_path_bfs(vector<int> source, int destination, list<Airline *> avoid = {}){
-    if (std::find(source.begin(),source.end(), destination) != source.end()) return {};
+ * @param source - Index of the source node
+ * @param destination - Index of the destination node
+ * @param validAirlines - unordered_set of Airlines that are valid
+ * @return A list of pair<airlineTable, string>, each representing the airlines that connected the previous pair to this one, and the code of the connected Airport
+*/
+list<pair<airlineTable, string>>
+Graph::shortest_path_bfs(list<int> source, int destination, airlineTable validAirlines) {
+    if (std::find(source.begin(), source.end(), destination) != source.end()) return {};
 
-    for (int i = 1; i<=this->n; i++) nodes[i].predecessing_trip = {-1,{}};
-    
-    vector<int> q;
-    for (int n : source){
-        q.push_back(n);
-        nodes[n].visited = true;
-        nodes[n].predecessing_trip.first = 0; // 0 como "nulo"
+    for (int i = 1; i <= n; i++) {
+        nodes[i].visited = false;
+        nodes[i].dist = -1;
+        nodes[i].predecessing_trip = {};
     }
-    
-    while (!q.empty()){
-        int u = q.back();
-        q.pop_back();
+    queue<int> q; // queue of unvisited nodes
+    for (int i: source) {
+        q.push(i);
+        nodes[i].visited = true;
+        nodes[i].dist = 0;
+        nodes[i].predecessing_trip = {{{}, nodes[i].airport.getCode()}};
+    }
 
-        for (Edge e : nodes[u].adj){
+    while (!q.empty()) { // while there are still unvisited nodes
+        int u = q.front();
+        q.pop();
+        // show node order
+        //cout << u << " ";
+        for (auto e: nodes[u].adj) {
             int w = e.dest;
-            list<Airline *> airlines = e.airlines;
-            list<Airline *> available_airlines = avoid_airlines(airlines,avoid);
-            if (!nodes[w].visited && !available_airlines.empty()){  
+            airlineTable available_airlines = intersectTables(validAirlines, e.airlines);
+            if (!nodes[w].visited && !available_airlines.empty()) {
+                q.push(w);
                 nodes[w].visited = true;
-                nodes[w].predecessing_trip = {u,available_airlines};
-                q.push_back(w);
+                nodes[w].dist = nodes[u].dist + 1;
+                nodes[w].predecessing_trip = nodes[u].predecessing_trip;
+                nodes[w].predecessing_trip.push_back({available_airlines, nodes[w].airport.getCode()});
             }
+            if (w == destination) break;
         }
-        
-        if (std::find(q.begin(),q.end(), destination) != q.end()) break;
     }
-
-    if (!nodes[destination].visited) return {};
-
-    list<pair<int,list<Airline *>>> travel;
-    int current = destination;
-    do{
-        travel.push_front(nodes[current].predecessing_trip);
-        current = nodes[current].predecessing_trip.first;
-    }while (nodes[current].predecessing_trip.first != 0);
-
-    return travel;
+    return nodes[destination].predecessing_trip;
 }
 
-/*
+/**
  * Computes the number of Airlines that carry flights leaving from a given Airport
  * Time Complexity: O(outdegree(v) * N² + N) (worst case) | O(outdegree(v) * N) (average case), where N is the number of different airlines carrying flights from the given Airport and v is the node associated with the given Airport
  * @param airport - Airport whose number of Airlines should be calculated
@@ -214,7 +199,7 @@ unsigned Graph::numCountries(const Airport &airport) const {
 
 /**
  * Intersects two unordered_set<Airline>
- * Time Complexity: 0(n * m) (worst case) | O(n) (average case), where n is the size of the first table and m the size of the second table
+ * Time Complexity: O(n * m) (worst case) | O(n) (average case), where n is the size of the first table and m the size of the second table
  * @param table1 - First table
  * @param table2 - Second table
  * @return Intersection between the two given airline tables
@@ -311,4 +296,29 @@ unsigned Graph::numCountriesInXFlights(const Airport &airport, unsigned numFligh
     }
     return currentCountries.size() - 1; //Excluding the airport itself
 }
+
+/**
+ * Computes a list of the shortest paths (not exhaustive) connecting the source airports to the target airports, using only airlines in validAirlines
+ * Time Complexity: O(|V|+|E| * n * m * k) (worst case) | O(|V|+|E| * n * k) (average case), where n is the size of validAirlines, m is the largest number of airlines on an Edge, and k the size of target
+ * @param source - List of source Airports
+ * @param target - List of target Airports
+ * @param validAirlines - unordered_set of Airlines that are valid
+ * @return A list of the shortest paths, where paths are a list of pair<airlineTable, string>, each representing the airlines that connected the previous pair to this one, and the code of the connected Airport
+ */
+list<list<pair<airlineTable, string>>>
+Graph::getShortestPath(const list<Airport> &source, const list<Airport> &target, airlineTable validAirlines) {
+    list<int> listSource, listDest;
+    list<list<pair<airlineTable, string>>> shortestPaths;
+
+    for (const Airport &airport: source) { listSource.push_back(airportToNode[airport]); }
+
+    for (const Airport &airport: target) {
+        auto currentPath = shortest_path_bfs(listSource, airportToNode[airport], validAirlines);
+        if (shortestPaths.size() == 0 || currentPath.size() == shortestPaths.front().size())
+            shortestPaths.push_back(currentPath);
+        else if (currentPath.size() < shortestPaths.front().size()) shortestPaths = {currentPath};
+    }
+    return shortestPaths;
+}
+
 
