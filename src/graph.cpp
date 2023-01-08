@@ -312,6 +312,12 @@ unsigned Graph::numCountriesInXFlights(const Airport &airport, unsigned numFligh
     return currentCountries.size() - 1; //Excluding the airport itself
 }
 
+/**
+ * Basic BFS algorithm adapted to register the distance from the starting node in its atributes
+ * Time Complexity: O(|V+E|)
+ * 
+ * @param v - Index of the node node from where the search begins
+ */
 int Graph::bfsMaxDistance(int v) {
     for (int i = 1; i <= n; i++) {
         nodes[i].visited = false;
@@ -340,14 +346,42 @@ int Graph::bfsMaxDistance(int v) {
     return maxDistance;
 }
 
+/**
+ * Calculates the diameter of the graph composed by the airports
+ * Time Complexity: Worst Case: O(|V|(|V+E|))
+ */
 int Graph::getDiameter() {
     int maxDistance = -1;
     for (int i = 1; i <= n; i++) {
-        for(Node n: nodes){
+        /*for(Node n: nodes){
             if(n.dist == -1) return -1; //Há nós que não foram visitados: Mais que um componente conexo
-        }
+        }*/
         int currentDistance = bfsMaxDistance(i);
         if(currentDistance > maxDistance) maxDistance = currentDistance;
     }
     return maxDistance;
+}
+
+/**
+ * Computes the ammount of flights that exist, ignoring their airlines.
+ * Time Complexity: O(|V|)
+ */
+int Graph::getTotalConnectingFlights() const{
+    int nFlights = 0;
+    for (int i = 1; i <= n; i++){
+        nFlights += nodes[i].adj.size();
+    }
+    return nFlights;
+}
+
+/**
+ * Computes the ammount of unique flights that exist, considering the airlines. 
+ * Time Complexity: O(|V*E|)
+ */
+int Graph::getTotalFlights() const{
+    int nFlights = 0;
+    for (int i = 1; i<= n; i++){
+        for (Edge e : nodes[i].adj) nFlights += e.airlines.size();
+    }
+    return nFlights;
 }

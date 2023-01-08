@@ -46,11 +46,12 @@ public:
     //void dfs(int v);
 
     // Breadth-First Search: example implementation
-    //TODO: Multi-source BFS
     list<pair<int,list<Airline *>>> shortest_path_bfs(vector<int> source, int destination, list<Airline *> avoid = {});
     int bfsMaxDistance(int v);
 
     int getN() const;
+    int getTotalConnectingFlights() const; //total voos ignorando companhias
+    int getTotalFlights() const; // total de voos únicos
 
     void setN(int n);
 
