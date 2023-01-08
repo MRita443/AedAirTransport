@@ -51,11 +51,10 @@ public:
     //void dfs(int v);
 
     // Breadth-First Search: example implementation
-<<<<<<< HEAD
+
     int dfs_scc(int v);
-=======
     int bfsMaxDistance(int v);
->>>>>>> master
+
     list<pair<int, airlineTable>> shortest_path_bfs(vector<int> source, int destination, list<Airline *> avoid = {});
 
 
