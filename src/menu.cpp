@@ -331,10 +331,10 @@ unsigned Menu::flightsMenu() {
                             break;
                         }
                         if (currentSelection == "departure") {
-                            departure.push_back(airport.value());
+                            departure = {airport.value()};
                             validFirstInput = true;
                         } else {
-                            arrival.push_back(airport.value());
+                            arrival = {airport.value()};
                             validFullInput = true;
                         }
 
@@ -343,12 +343,12 @@ unsigned Menu::flightsMenu() {
                     case '2': {
                         string city;
                         cout << "Please enter your preferred city of " << currentSelection << ": ";
-                        cin >> city;
+                        getline(cin, city);
                         if (!checkInput()) break;
 
                         string country;
                         cout << "Please enter the country this city is located in: ";
-                        cin >> country;
+                        getline(cin, country);
                         if (!checkInput()) break;
                         if (!dataRepository.checkValidCityCountry(city, country)) {
                             cout << "This city and country combination is not valid!" << endl;
@@ -416,7 +416,24 @@ unsigned Menu::flightsMenu() {
 
         if (validFullInput) {
             airlineTable validAirlines = airlineRestrictionsMenu();
-            //TODO: Get shortest flight with given airlines
+            auto result = graph.getShortestPath(departure, arrival, validAirlines);
+            if (result.size() == 0 || result.front().size() == 0) {
+                cout << endl << "We couldn't find any valid flights for your preferences." << endl;
+                continue;
+            }
+            cout << endl << "We suggest you take one of the following paths: " << endl;
+            for (auto path: result) {
+                for (const pair<airlineTable, string> &flights: path) {
+                    cout << flights.second;
+                    if (!flights.first.empty()) cout << " (flights by:";
+                    for (const Airline &airline: flights.first) {
+                        cout << " " << airline.getCode();
+                    }
+                    if (!flights.first.empty()) cout << ")";
+                    if (flights.second != path.back().second) cout << " -> ";
+                }
+                cout << endl;
+            }
         }
     }
     return commandIn;
@@ -528,7 +545,8 @@ unsigned Menu::airportInfoMenu() {
                     cin >> numFlights;
                     if (!checkInput(5)) break;
 
-                    cout << graph.numAirportsInXFlights(airport.value(), numFlights) << " other airports are reachable in "
+                    cout << graph.numAirportsInXFlights(airport.value(), numFlights)
+                         << " other airports are reachable in "
                          << numFlights << " or less flights from "
                          << airport->getName() << " airport." << endl;
                     break;
@@ -570,7 +588,8 @@ unsigned Menu::airportInfoMenu() {
                     cin >> numFlights;
                     if (!checkInput(5)) break;
 
-                    cout << graph.numCountriesInXFlights(airport.value(), numFlights) << " other countries are reachable in "
+                    cout << graph.numCountriesInXFlights(airport.value(), numFlights)
+                         << " other countries are reachable in "
                          << numFlights << " or less flights from "
                          << airport->getName() << " airport." << endl;
                     break;

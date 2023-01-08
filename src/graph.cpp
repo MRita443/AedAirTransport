@@ -32,8 +32,7 @@ void Graph::addEdge(int src, int dest, const Airline &airline) {
                                        [dest](Edge e) { return e.dest == dest; });
     if (existingEdgeIt != nodes[src].adj.end()) {
         existingEdgeIt->airlines.insert(airline);
-    }
-    else nodes[src].adj.push_back({dest, airlineTable({airline})});
+    } else nodes[src].adj.push_back({dest, airlineTable({airline})});
 }
 
 /**
@@ -152,19 +151,13 @@ Graph::shortest_path_bfs(list<int> source, int destination, airlineTable validAi
         //cout << u << " ";
         for (auto e: nodes[u].adj) {
             int w = e.dest;
-            if (nodes[w].airport.getCode() == "YYZ") {
-                int c = 0;
-            }
             airlineTable available_airlines = intersectTables(validAirlines, e.airlines);
             if (!nodes[w].visited && !available_airlines.empty()) {
                 q.push(w);
                 nodes[w].visited = true;
                 nodes[w].dist = nodes[u].dist + 1;
-                auto a = nodes[w].predecessing_trip;
                 nodes[w].predecessing_trip = nodes[u].predecessing_trip;
-                auto b = nodes[w].predecessing_trip;
                 nodes[w].predecessing_trip.push_back({available_airlines, nodes[w].airport.getCode()});
-                auto c = nodes[w].predecessing_trip;
             }
         }
     }
@@ -318,4 +311,22 @@ unsigned Graph::numCountriesInXFlights(const Airport &airport, unsigned numFligh
     }
     return currentCountries.size() - 1; //Excluding the airport itself
 }
+
+list<list<pair<airlineTable, string>>>
+Graph::getShortestPath(const list<Airport> &source, const list<Airport> &target, airlineTable validAirlines) {
+    list<int> listSource, listDest;
+    list<list<pair<airlineTable, string>>> shortestPaths;
+
+    for (const Airport &airport: source) { listSource.push_back(airportToNode[airport]); }
+
+    for (const Airport &airport: target) {
+        int a = airportToNode[airport];
+        auto currentPath = shortest_path_bfs(listSource, airportToNode[airport], validAirlines);
+        if (shortestPaths.size() == 0 || currentPath.size() == shortestPaths.front().size())
+            shortestPaths.push_back(currentPath);
+        else if (currentPath.size() < shortestPaths.front().size()) shortestPaths = {currentPath};
+    }
+    return shortestPaths;
+}
+
 

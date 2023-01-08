@@ -91,6 +91,9 @@ public:
     unsigned int numCountriesInXFlights(const Airport &airport, unsigned int numFlights);
 
     list<pair<airlineTable, string>> shortest_path_bfs(list<int> source, int destination, airlineTable validAirlines);
+
+    list<list<pair<airlineTable, string>>>
+    getShortestPath(const list<Airport> &source, const list<Airport> &target, airlineTable validAirlines);
 };
 
 #endif
