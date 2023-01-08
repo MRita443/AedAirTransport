@@ -52,7 +52,7 @@ public:
 
 
     int getN() const;
-    int getTotalConnectingFlights() const; //total voos ignorando companhias
+    int getTotalFlightsAirlineless() const; //total voos ignorando companhias
     int getTotalFlights() const; // total de voos únicos
 
     void setN(int n);

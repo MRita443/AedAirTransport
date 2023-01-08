@@ -67,6 +67,8 @@ public:
     bool checkValidCityCountry(const std::string &city, const std::string &country);
 
     std::list<Airport> findAirportsInLocation(float latitude, float longitude, float maxDistance);
+
+    unsigned int getTotalNumCountries();
 };
 
 
