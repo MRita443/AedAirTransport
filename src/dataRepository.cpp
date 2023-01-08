@@ -2,6 +2,7 @@
 // Created by rita on 04-01-2023.
 //
 
+#include <iostream>
 #include "dataRepository.h"
 
 using namespace std;

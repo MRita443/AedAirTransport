@@ -628,7 +628,7 @@ unsigned Menu::generalInfoMenu() {
             cout << setw(COLUMN_WIDTH) << "Number of cities: [4]" << setw(COLUMN_WIDTH)
                  << "Number of countries: [5]" << setw(COLUMN_WIDTH)
                  << "Number of strongly connected components: [6]" << endl;
-            cout << setw(COLUMN_WIDTH) << "Diameter: [7]" << endl
+            cout << setw(COLUMN_WIDTH) << "Diameter: [7]" << setw(COLUMN_WIDTH)
                  << "Back: [b]" << setw(COLUMN_WIDTH) << "Quit: [q]" << endl;
         }
 
@@ -667,6 +667,8 @@ unsigned Menu::generalInfoMenu() {
                     break;
                 }
                 case '6': {
+                    cout << "Our flights graph has " << graph.countSCCs() << " strongly connected components!"
+                         << endl;
                     break;
                 }
                 case '7': {
