@@ -51,6 +51,8 @@ public:
     static void airportDoesntExist();
 
     static void airlineDoesntExist();
+
+    unsigned int generalInfoMenu();
 };
 
 #endif

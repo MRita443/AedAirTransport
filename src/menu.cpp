@@ -179,7 +179,6 @@ void Menu::airlineDoesntExist() {
 
 /**
  * Outputs main menu screen and calls other menu screens according to user input
- * //TODO: Time Complexity
  */
 void Menu::mainMenu() {
 
@@ -226,7 +225,6 @@ void Menu::mainMenu() {
 
 /**
  * Outputs airline restrictions menu screen and returns a set containing all the valid airlines for the given inputs
- * //TODO: Time Complexity
  * @return - unordered_set<Airline> containing all the valid airlines for the flight
  *
  */
@@ -610,7 +608,86 @@ unsigned Menu::airportInfoMenu() {
     return commandIn;
 }
 
-//unsigned Menu::generalInfoMenu(){}
+/**
+ * Outputs general information menu screen and decides function calls according to user input
+ * @return - Last inputted command, or '\0' for previous menu command
+ */
+unsigned Menu::generalInfoMenu() {
+    unsigned char commandIn = '\0';
+
+    while (commandIn != 'q') {
+        if (commandIn == '\0') {
+            //Header
+            cout << setw(COLUMN_WIDTH * COLUMNS_PER_LINE / 2) << setfill('-') << right << "GENERAL IN";
+            cout << setw(COLUMN_WIDTH * COLUMNS_PER_LINE / 2) << left << "FOMARTION" << endl;
+
+            cout << setw(COLUMN_WIDTH) << setfill(' ') << "Number of flights: [1]" << setw(COLUMN_WIDTH)
+                 << "Number of airports: [2]" << setw(COLUMN_WIDTH)
+                 << "Number of airlines: [3]"
+                 << endl;
+            cout << setw(COLUMN_WIDTH) << "Number of cities: [4]" << setw(COLUMN_WIDTH)
+                 << "Number of countries: [5]" << setw(COLUMN_WIDTH)
+                 << "Number of strongly connected components: [6]" << endl;
+            cout << setw(COLUMN_WIDTH) << "Diameter: [7]" << endl
+                 << "Back: [b]" << setw(COLUMN_WIDTH) << "Quit: [q]" << endl;
+        }
+
+        while (commandIn != 'q') {
+            cout << endl << "Press the appropriate key to the function you'd like to access: ";
+            cin >> commandIn;
+
+            if (!checkInput(1)) {
+                commandIn = '\0';
+                continue;
+            }
+            switch (commandIn) {
+                case '1': {
+                    cout << "Our system includes " << graph.getTotalFlights() << " flights that connect "
+                         << graph.getTotalFlightsAirlineless() << " different pairs of airports!" << endl;
+                    break;
+                }
+                case '2': {
+                    cout << "Our system includes " << dataRepository.getAirports().size() << " different airports!"
+                         << endl;
+                    break;
+                }
+                case '3': {
+                    cout << "Our system includes " << dataRepository.getAirlines().size() << " different airlines!"
+                         << endl;
+                    break;
+                }
+                case '4': {
+                    cout << "Our system includes " << dataRepository.getCityToAirports().size() << " different cities!"
+                         << endl;
+                    break;
+                }
+                case '5': {
+                    cout << "Our system includes " << dataRepository.getTotalNumCountries() << " different countries!"
+                         << endl;
+                    break;
+                }
+                case '6': {
+                    break;
+                }
+                case '7': {
+                    cout << "Our flights graph has a diameter of " << graph.getDiameter() << "!" << endl;
+                    break;
+                }
+                case 'b': {
+                    return '\0';
+                }
+                case 'q': {
+                    cout << "Thank you for using our Air Transport Lookup System!" << endl;
+                    break;
+                }
+                default:
+                    cout << "Please press one of listed keys." << endl;
+                    break;
+            }
+        }
+    }
+    return commandIn;
+}
 
 /**
  * Outputs information menu screen and calls other menu screens according to user input
@@ -644,8 +721,7 @@ unsigned Menu::infoMenu() {
                 break;
             }
             case '2': {
-                //TODO: General Information functions
-                //commandIn = generalInfoMenu();
+                commandIn = generalInfoMenu();
                 break;
             }
             case 'b': {
