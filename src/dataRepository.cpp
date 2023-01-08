@@ -137,11 +137,7 @@ list<Airport> DataRepository::findAirportsInLocation(float latitude, float longi
     Position startPos = Position(latitude, longitude);
     list<Airport> valid;
     for (auto aport: airports) {
-        if(aport.getCode() == "CDG"){
-            cout << "ac";
-        }
         if (aport.getLocation().getDistance(startPos) <= maxDistance) {
-
             valid.push_back(aport);
         }
     }

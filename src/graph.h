@@ -47,16 +47,8 @@ public:
 
     void addNode(const Airport &airport);
 
-    // Depth-First Search: example implementation
-    //void dfs(int v);
-
-    // Breadth-First Search: example implementation
-
     int dfs_scc(int v);
     int bfsMaxDistance(int v);
-
-    list<pair<int, airlineTable>> shortest_path_bfs(vector<int> source, int destination, list<Airline *> avoid = {});
-
 
     int getN() const;
     int getTotalFlightsAirlineless() const; //total voos ignorando companhias
@@ -77,10 +69,6 @@ public:
     void setAirlines(const airlineTable &airlines);
 
     unsigned numFlights(const Airport &airport) const;
-
-
-    // ----- Functions to implement in this class -----
-    //int distance(int a, int b);
 
     int countSCCs();
     
