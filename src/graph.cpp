@@ -123,7 +123,7 @@ list<Airline *> avoid_airlines(list<Airline *> available, list<Airline *> avoid)
  * @param destination - Airport where the travel ends
  * @param avoid - List of Airlines that are to avoid
  */
-list<pair<int,list<Airline *>>> Graph::shortest_path_bfs(vector<int> source, int destination, list<Airline *> avoid = {}){
+/*list<pair<int,list<Airline *>>> Graph::shortest_path_bfs(vector<int> source, int destination, list<Airline *> avoid = {}){
     if (std::find(source.begin(),source.end(), destination) != source.end()) return {};
 
     for (int i = 1; i<=this->n; i++) nodes[i].predecessing_trip = {-1,{}};
@@ -163,7 +163,7 @@ list<pair<int,list<Airline *>>> Graph::shortest_path_bfs(vector<int> source, int
     }while (nodes[current].predecessing_trip.first != 0);
 
     return travel;
-}
+}*/
 
 /*
  * Computes the number of Airlines that carry flights leaving from a given Airport
@@ -312,3 +312,42 @@ unsigned Graph::numCountriesInXFlights(const Airport &airport, unsigned numFligh
     return currentCountries.size() - 1; //Excluding the airport itself
 }
 
+int Graph::bfsMaxDistance(int v) {
+    for (int i = 1; i <= n; i++) {
+        nodes[i].visited = false;
+        nodes[i].dist = -1;
+    }
+    int maxDistance = 0;
+    queue<int> q; // queue of unvisited nodes
+    q.push(v);
+    nodes[v].visited = true;
+    nodes[v].dist = 0;
+    while (!q.empty()) { // while there are still unvisited nodes
+        int u = q.front();
+        q.pop();
+        // show node order
+        //cout << u << " ";
+        for (auto e: nodes[u].adj) {
+            int w = e.dest;
+            if (!nodes[w].visited) {
+                q.push(w);
+                nodes[w].visited = true;
+                nodes[w].dist = nodes[u].dist + 1;
+                if (nodes[w].dist > maxDistance) maxDistance = nodes[w].dist;
+            }
+        }
+    }
+    return maxDistance;
+}
+
+int Graph::getDiameter() {
+    int maxDistance = -1;
+    for (int i = 1; i <= n; i++) {
+        for(Node n: nodes){
+            if(n.dist == -1) return -1; //Há nós que não foram visitados: Mais que um componente conexo
+        }
+        int currentDistance = bfsMaxDistance(i);
+        if(currentDistance > maxDistance) maxDistance = currentDistance;
+    }
+    return maxDistance;
+}
