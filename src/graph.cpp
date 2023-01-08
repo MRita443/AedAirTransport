@@ -1,6 +1,5 @@
 #include "graph.h"
-#include <map>
-#include <algorithm>
+
 using namespace std;
 
 // Constructor: nr nodes
@@ -21,14 +20,20 @@ void Graph::addEdge(int src, int dest, const airlineTable &connectingAirlines) {
 
 /**
  * Adds an edge to the graph
- * Time Complexity: O(1)
+ * Time Complexity: TODO: TIME COMPLEXITY
  * @param src - Number of the source node
  * @param dest - Number of the destination node
  * @param airline - Pointer to an Airlines whose flight connects the two nodes (Airports)
  */
 void Graph::addEdge(int src, int dest, const Airline &airline) {
     if (src < 1 || src > n || dest < 1 || dest > n) return;
-    nodes[src].adj.push_back({dest, airlineTable({airline})});
+
+    auto existingEdgeIt = std::find_if(nodes[src].adj.begin(), nodes[src].adj.end(),
+                                       [dest](Edge e) { return e.dest == dest; });
+    if (existingEdgeIt != nodes[src].adj.end()) {
+        existingEdgeIt->airlines.insert(airline);
+    }
+    else nodes[src].adj.push_back({dest, airlineTable({airline})});
 }
 
 /**
@@ -105,12 +110,12 @@ unsigned Graph::numFlights(const Airport &airport) const {
  * @param available - List with available airlines for the flight
  * @param avoid - List with unwanted airlines
  */
-list<Airline *> avoid_airlines(list<Airline *> available, list<Airline *> avoid){
+list<Airline *> avoid_airlines(list<Airline *> available, list<Airline *> avoid) {
     auto it = available.begin();
-    while (it != available.end()){
+    while (it != available.end()) {
         auto curr = it;
         it++;
-        if (find(avoid.begin(),avoid.end(),*curr) != avoid.end()) available.erase(curr);
+        if (find(avoid.begin(), avoid.end(), *curr) != avoid.end()) available.erase(curr);
     }
     return available;
 }
@@ -123,46 +128,48 @@ list<Airline *> avoid_airlines(list<Airline *> available, list<Airline *> avoid)
  * @param destination - Airport where the travel ends
  * @param avoid - List of Airlines that are to avoid
  */
-list<pair<int,list<Airline *>>> Graph::shortest_path_bfs(vector<int> source, int destination, list<Airline *> avoid = {}){
-    if (std::find(source.begin(),source.end(), destination) != source.end()) return {};
+list<pair<airlineTable, string>>
+Graph::shortest_path_bfs(list<int> source, int destination, airlineTable validAirlines) {
+    if (std::find(source.begin(), source.end(), destination) != source.end()) return {};
 
-    for (int i = 1; i<=this->n; i++) nodes[i].predecessing_trip = {-1,{}};
-    
-    vector<int> q;
-    for (int n : source){
-        q.push_back(n);
-        nodes[n].visited = true;
-        nodes[n].predecessing_trip.first = 0; // 0 como "nulo"
+    for (int i = 1; i <= n; i++) {
+        nodes[i].visited = false;
+        nodes[i].dist = -1;
+        nodes[i].predecessing_trip = {};
     }
-    
-    while (!q.empty()){
-        int u = q.back();
-        q.pop_back();
+    queue<int> q; // queue of unvisited nodes
+    for (int i: source) {
+        q.push(i);
+        nodes[i].visited = true;
+        nodes[i].dist = 0;
+        nodes[i].predecessing_trip = {{{}, nodes[i].airport.getCode()}};
+    }
 
-        for (Edge e : nodes[u].adj){
+    while (!q.empty()) { // while there are still unvisited nodes
+        int u = q.front();
+        q.pop();
+        // show node order
+        //cout << u << " ";
+        for (auto e: nodes[u].adj) {
             int w = e.dest;
-            list<Airline *> airlines = e.airlines;
-            list<Airline *> available_airlines = avoid_airlines(airlines,avoid);
-            if (!nodes[w].visited && !available_airlines.empty()){  
+            if (nodes[w].airport.getCode() == "YYZ") {
+                int c = 0;
+            }
+            airlineTable available_airlines = intersectTables(validAirlines, e.airlines);
+            if (!nodes[w].visited && !available_airlines.empty()) {
+                q.push(w);
                 nodes[w].visited = true;
-                nodes[w].predecessing_trip = {u,available_airlines};
-                q.push_back(w);
+                nodes[w].dist = nodes[u].dist + 1;
+                auto a = nodes[w].predecessing_trip;
+                nodes[w].predecessing_trip = nodes[u].predecessing_trip;
+                auto b = nodes[w].predecessing_trip;
+                nodes[w].predecessing_trip.push_back({available_airlines, nodes[w].airport.getCode()});
+                auto c = nodes[w].predecessing_trip;
             }
         }
-        
-        if (std::find(q.begin(),q.end(), destination) != q.end()) break;
     }
 
-    if (!nodes[destination].visited) return {};
-
-    list<pair<int,list<Airline *>>> travel;
-    int current = destination;
-    do{
-        travel.push_front(nodes[current].predecessing_trip);
-        current = nodes[current].predecessing_trip.first;
-    }while (nodes[current].predecessing_trip.first != 0);
-
-    return travel;
+    return nodes[destination].predecessing_trip;
 }
 
 /*
